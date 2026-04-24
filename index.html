@@ -939,8 +939,29 @@ function renderFamCal(){
       else if(ba<TOTAL_BEDS){html+='<span class="ba-badge" style="color:'+baCol+'">BA:'+ba+'</span>'}
       html+='</div>';
       html+='<div class="pills-wrap">';
+      // 1. Group event pills
+      var fDv=visitsOn(dateS);
+      var fGrouped={};
+      fDv.forEach(function(v){
+        if(v.is_group){var k=v.guest_name||'';if(!fGrouped[k])fGrouped[k]={totalPpl:0,host:v.host,start:d10(v.start_date),id:v.id};fGrouped[k].totalPpl+=(v.people||0)}
+      });
+      Object.keys(fGrouped).forEach(function(k){
+        var g=fGrouped[k];var c=HC[g.host]||HC.Family;var isStart=dateS===g.start;
+        html+='<div class="event-pill group-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+g.id+'" onclick="pillClick(event,this.dataset.vid)">';
+        html+=isStart?k+' ('+g.totalPpl+')':k;
+        html+='</div>';
+      });
+      // 2. Family members
       dayF.forEach(function(f){
         html+='<div class="family-pill" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">'+f.member+'</div>';
+      });
+      // 3. Individual/couple guests
+      fDv.filter(function(v){return!v.is_group}).forEach(function(v){
+        var c=HC[v.host]||HC.Family;var isStart=dateS===d10(v.start_date);var lbl=v.couple_name||v.guest_name||'';
+        html+='<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)">';
+        html+='<span class="pill-name">'+lbl+'</span>';
+        if(isStart&&v.people)html+='<span class="pill-pax">'+v.people+'p</span>';
+        html+='</div>';
       });
       html+='</div></div>';
     }
