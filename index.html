@@ -29,6 +29,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .user-pill{font-size:12px;color:#aaa;padding:4px 10px;background:rgba(255,255,255,0.08);border-radius:20px}
 .logout-btn{font-size:12px;color:#888;cursor:pointer;background:none;border:none;padding:4px 8px}
 .logout-btn:hover{color:#fff}
+.dev-wrap{position:relative}
+.dev-btn{font-size:11px;color:#666;cursor:pointer;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px}
+.dev-btn:hover{background:rgba(255,255,255,0.12);color:#bbb}
+.dev-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#111;border:1px solid rgba(255,255,255,0.12);border-radius:10px;min-width:210px;overflow:hidden;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.dev-menu.open{display:block}
+.dev-menu-label{font-size:10px;color:#444;padding:8px 14px 4px;letter-spacing:0.07em;text-transform:uppercase}
+.dev-link{display:flex;align-items:center;gap:8px;font-size:12px;color:#aaa;padding:9px 14px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05)}
+.dev-link:hover{background:rgba(255,255,255,0.05);color:#fff}
+.dev-refresh{display:flex;align-items:center;gap:8px;width:100%;text-align:left;font-size:12px;color:#aaa;padding:9px 14px;background:none;border:none;border-top:1px solid rgba(255,255,255,0.08);cursor:pointer}
+.dev-refresh:hover{background:rgba(255,255,255,0.05);color:#fff}
 
 /* ── MAIN ── */
 .main{max-width:1060px;margin:0 auto;padding:24px 28px 48px}
@@ -159,6 +169,16 @@ const APP_VERSION = '2025.1.0';
     </div>
     <div class="header-right">
       <span class="user-pill" id="userPill"></span>
+      <div class="dev-wrap">
+        <button class="dev-btn" onclick="toggleDevMenu()">Dev ▾</button>
+        <div class="dev-menu" id="devMenu">
+          <div class="dev-menu-label">Developer links</div>
+          <a class="dev-link" href="https://github.com/benfischman71/cape-cod-calendar/blob/main/index.html" target="_blank">⌥ GitHub — index.html</a>
+          <a class="dev-link" href="https://supabase.com/dashboard/project/shfdqitsdbvqeexaxjpf/sql/8b22ca5f-68aa-443b-a0b2-728bf5bd208c" target="_blank">⌥ Supabase dashboard</a>
+          <a class="dev-link" href="https://claude.ai/chat/67eae62b-43e4-4351-8685-9e60efe3ea48" target="_blank">⌥ This Claude chat</a>
+          <button class="dev-refresh" onclick="hardRefresh()">↺ Hard refresh</button>
+        </div>
+      </div>
       <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
   </div>
@@ -315,6 +335,19 @@ function hasConflict(roomId,start,end,excludeId){
     return v.id!==excludeId && v.room===roomId && v.start_date<end && v.end_date>start;
   });
 }
+
+// ─────────────────────────────────────────
+// DEV MENU
+// ─────────────────────────────────────────
+function toggleDevMenu(){
+  document.getElementById('devMenu').classList.toggle('open');
+}
+function hardRefresh(){
+  window.location.reload(true);
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.dev-wrap')) document.getElementById('devMenu') && document.getElementById('devMenu').classList.remove('open');
+});
 
 // ─────────────────────────────────────────
 // SUPABASE INIT
