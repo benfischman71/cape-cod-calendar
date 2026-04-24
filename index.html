@@ -424,8 +424,8 @@ var HOLIDAYS={
   '2026-06-29':{label:"Corey's birthday",   short:'Corey 🎂',      type:'birthday'},
   '2026-07-04':{label:'4th of July',        short:'4th of July',   type:'holiday'},
   '2026-07-08':{label:"Steve's birthday",   short:'Steve 🎂',      type:'birthday'},
-  '2026-08-01':{label:"Wendy's birthday",   short:'Wendy 🎂',      type:'birthday'},
-  '2026-08-02':{label:'🚴 PMC',             short:'🚴 PMC',        type:'holiday'}
+  '2026-08-01':{label:"Wendy's birthday · 🚴 PMC Day 1", short:'Wendy 🎂 · PMC', type:'birthday'},
+  '2026-08-02':{label:'🚴 PMC Day 2',     short:'🚴 PMC Day 2',  type:'holiday'}
 };
 var MONTHS=[{name:'May',y:2026,m:4},{name:'June',y:2026,m:5},{name:'July',y:2026,m:6},{name:'August',y:2026,m:7}];
 var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -564,6 +564,7 @@ function onArrivalChange(){
   endEl.min=ns;
   if(!endEl.value||endEl.value<=start)endEl.value=ns;
   updateRoomAvailability();
+  setTimeout(function(){endEl.focus();endEl.click()},50);
 }
 
 function updateRoomAvailability(){
@@ -750,6 +751,7 @@ function onFsArrivalChange(){
   endEl.min=ns;
   if(!endEl.value||endEl.value<=start)endEl.value=ns;
   updateFsRoomLabel();
+  setTimeout(function(){endEl.focus();endEl.click()},50);
 }
 function updateFsRoomLabel(){
   var member=document.getElementById('fsMember').value;
