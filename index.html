@@ -401,15 +401,15 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 <script>
 // ── DATA ─────────────────────────────────
 var ROOMS={
-  ns:  {label:'Nancy & Steve',           section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Steve & Nancy']},
-  bw:  {label:'Ben & Wendy',             section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Ben & Wendy']},
-  mol: {label:'Molly',                   section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Molly']},
-  bunk:{label:'Bunk room – Corey',       section:'Main house',  maxPeople:6, bedDesc:'1 king + 2 full bunks',owner:['Corey']},
-  og1: {label:'Over garage 1 – TK',     section:'Over garage', maxPeople:2, bedDesc:'1 king',              owner:['TK']},
-  og2: {label:'Over garage 2 – Jake',   section:'Over garage', maxPeople:2, bedDesc:'1 king',              owner:['Jake']},
-  ghu: {label:'Guest house upstairs',   section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]},
-  ghr: {label:'Guest house rear',       section:'Guest house', maxPeople:4, bedDesc:'2 queens',            owner:[]},
-  ghf: {label:'Guest house front',      section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]}
+  ns:  {label:'Nancy & Steve',           section:'Main house',  maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:['Steve & Nancy']},
+  bw:  {label:'Ben & Wendy',             section:'Main house',  maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:['Ben & Wendy']},
+  mol: {label:'Molly',                   section:'Main house',  maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:['Molly']},
+  bunk:{label:'Bunk room – Corey',       section:'Main house',  maxPeople:6, bedCount:3, bedDesc:'1 king + 2 full bunks',owner:['Corey']},
+  og1: {label:'Over garage 1 – TK',     section:'Over garage', maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:['TK']},
+  og2: {label:'Over garage 2 – Jake',   section:'Over garage', maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:['Jake']},
+  ghu: {label:'Guest house upstairs',   section:'Guest house', maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:[]},
+  ghr: {label:'Guest house rear',       section:'Guest house', maxPeople:4, bedCount:2, bedDesc:'2 queens',            owner:[]},
+  ghf: {label:'Guest house front',      section:'Guest house', maxPeople:2, bedCount:1, bedDesc:'1 king',              owner:[]}
 };
 var MEMBER_ROOM={'Steve & Nancy':'ns','Ben & Wendy':'bw',Molly:'mol',TK:'og1',Jake:'og2',Corey:'bunk'};
 var MEMBER_PEOPLE={'Steve & Nancy':2,'Ben & Wendy':2,Molly:1,TK:1,Jake:1,Corey:1};
@@ -456,12 +456,10 @@ function visitsOn(d){return visits.filter(function(v){var s=(v.start_date||'').s
 function familyOn(d){return familyStays.filter(function(f){var s=(f.start_date||'').substring(0,10);var e=(f.end_date||'').substring(0,10);return d>=s&&d<=e})}
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
 function bedsAvailableOn(d){
-  var bookedRooms=visitsOn(d).map(function(v){return v.room});
-  var blockedRooms=Object.keys(ROOMS).filter(function(rid){return isBlockedByFamily(rid,d,d+'\x01')});
-  var occupied=bookedRooms.concat(blockedRooms);
-  return Object.keys(ROOMS).reduce(function(a,rid){
-    return a+(occupied.indexOf(rid)<0?ROOMS[rid].maxPeople:0);
-  },0);
+  var total=Object.keys(ROOMS).reduce(function(a,rid){return a+ROOMS[rid].bedCount},0);
+  var guestBeds=visitsOn(d).reduce(function(a,v){var r=ROOMS[v.room];return a+(r?r.bedCount:1)},0);
+  var famBeds=familyOn(d).length;
+  return Math.max(0,total-guestBeds-famBeds);
 }
 function showLoading(){document.getElementById('loadingBar').style.width='60%'}
 function hideLoading(){var b=document.getElementById('loadingBar');b.style.width='100%';setTimeout(function(){b.style.width='0'},400)}
@@ -1043,9 +1041,6 @@ function renderFamilyCalendar(){
       html+='<div style="display:flex;flex-wrap:wrap;gap:2px;align-content:flex-start">';
       dayFs.slice(0,7).forEach(function(f){
         html+='<div class="family-pill" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">'+f.member+'</div>';
-      });
-      if(dayFs.length>7)html+='<div class="more-tag">+'+(dayFs.length-7)+'</div>';
-      html+='</div>';
       });
       if(dayFs.length>7)html+='<div class="more-tag">+'+(dayFs.length-7)+'</div>';
       html+='</div>';
