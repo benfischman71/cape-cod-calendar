@@ -185,7 +185,7 @@ const APP_VERSION = '2025.1.0';
         <div class="fl">
           <label>Hosted by</label>
           <select id="fHost">
-            <option>Nancy</option><option>Steve</option><option>Ben</option><option>Wendy</option><option>Molly</option>
+            <option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option>
           </select>
         </div>
         <div class="fl"><label>Number of guests</label><input type="number" id="fPeople" value="2" min="1" max="12"/></div>
@@ -249,12 +249,25 @@ var ROOMS = {
 };
 
 var HOST_COLORS = {
-  Nancy:  {bg:'#E6F1FB', bdr:'#185FA5', txt:'#0C447C'},
   Steve:  {bg:'#EAF3DE', bdr:'#3B6D11', txt:'#27500A'},
+  Nancy:  {bg:'#E6F1FB', bdr:'#185FA5', txt:'#0C447C'},
   Ben:    {bg:'#FAEEDA', bdr:'#854F0B', txt:'#633806'},
   Wendy:  {bg:'#FBEAF0', bdr:'#993556', txt:'#72243E'},
+  TK:     {bg:'#EEEDFE', bdr:'#534AB7', txt:'#3C3489'},
+  Jake:   {bg:'#FCEBEB', bdr:'#A32D2D', txt:'#791F1F'},
   Molly:  {bg:'#E1F5EE', bdr:'#0F6E56', txt:'#085041'},
-  Family: {bg:'#EEEDFE', bdr:'#534AB7', txt:'#3C3489'}
+  Corey:  {bg:'#FAEEDA', bdr:'#BA7517', txt:'#854F0B'},
+  Family: {bg:'#F1EFE8', bdr:'#5F5E5A', txt:'#444441'}
+};
+
+var HOLIDAYS = {
+  '2025-05-26': {label:'Memorial Day',     icon:'flag', type:'holiday'},
+  '2025-06-15': {label:"Father's Day",     icon:'day',  type:'holiday'},
+  '2025-06-18': {label:"Ben's birthday",   icon:'bday', type:'birthday'},
+  '2025-06-29': {label:"Corey's birthday", icon:'bday', type:'birthday'},
+  '2025-07-04': {label:'4th of July',      icon:'flag', type:'holiday'},
+  '2025-07-08': {label:"Steve's birthday", icon:'bday', type:'birthday'},
+  '2025-08-01': {label:"Wendy's birthday", icon:'bday', type:'birthday'},
 };
 
 var MONTHS = [
@@ -457,7 +470,7 @@ async function deleteVisit(id){
 function openNewModal(){
   editingId = null;
   document.getElementById('fGuest').value='';
-  document.getElementById('fHost').value='Nancy';
+  document.getElementById('fHost').value='Steve';
   document.getElementById('fRoom').value='og1';
   document.getElementById('fPeople').value='2';
   document.getElementById('fStart').value=prefillDate||'';
@@ -476,7 +489,7 @@ function openEditModal(id){
   if(!v) return;
   editingId = id;
   document.getElementById('fGuest').value = v.guest_name||'';
-  document.getElementById('fHost').value  = v.host||'Nancy';
+  document.getElementById('fHost').value  = v.host||'Steve';
   document.getElementById('fRoom').value  = v.room||'og1';
   document.getElementById('fPeople').value= v.people||2;
   document.getElementById('fStart').value = v.start_date||'';
@@ -557,7 +570,7 @@ function closeDetail(){
 // ─────────────────────────────────────────
 function renderFilters(){
   var el = document.getElementById('hostFilters');
-  var hosts = ['All','Nancy','Steve','Ben','Wendy','Molly'];
+  var hosts = ['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'];
   var html = '';
   hosts.forEach(function(h){
     var cls = 'filter-btn'+(h===activeFilter?' active':'');
@@ -635,9 +648,17 @@ function renderCalendar(){
 
       html += '<div class="'+cls+'" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
       html += '<div class="day-top">';
-      html += '<div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
+      html += '<div class="day-num'+(isToday?' is-today':'')+'">'+(HOLIDAYS[dateS]&&HOLIDAYS[dateS].type==='birthday'?'🎂 ':'')+d+'</div>';
       if(pax>0) html += '<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'" title="'+pax+' guests across '+dayVisits.length+' room(s)">'+pax+'<span style="opacity:0.6;margin-left:1px">pax</span></div>';
       html += '</div>';
+      if(HOLIDAYS[dateS]){
+        var hol = HOLIDAYS[dateS];
+        var hbg = hol.type==='birthday' ? '#FBEAF0' : '#E6F1FB';
+        var hbdr = hol.type==='birthday' ? '#993556' : '#185FA5';
+        var htxt = hol.type==='birthday' ? '#72243E' : '#0C447C';
+        if(hol.type==='holiday'){ hbg='#FAEEDA'; hbdr='#854F0B'; htxt='#633806'; }
+        html += '<div style="font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px">'+hol.label+'</div>';
+      }
 
       dayVisits.slice(0,3).forEach(function(v){
         var c = HOST_COLORS[v.host]||HOST_COLORS.Family;
