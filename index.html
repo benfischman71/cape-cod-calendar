@@ -945,10 +945,12 @@ function renderCalendar(){
       var dv=visitsOn(dateS).filter(function(v){return activeFilter==='All'||v.host===activeFilter});
       var pax=peopleOn(dateS);var pc=paxColor(pax);var hol=HOLIDAYS[dateS];
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
+      var holHtml='';
+      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';holHtml='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
-      if(pax>0)html+='<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'">'+pax+'</div>';
+      html+=holHtml;
+      if(!hol&&pax>0)html+='<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'">'+pax+'</div>';
       html+='</div>';
-      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+hol.short+'</div>'}
       dv.slice(0,3).forEach(function(v){
         var c=HC[v.host]||HC.Family;var isStart=dateS===(v.start_date||"").substring(0,10);var lbl=v.couple_name||v.guest_name||"";
         html+='<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)">';
@@ -987,10 +989,12 @@ function renderFamilyCalendar(){
       var dayFs=familyOn(dateS).filter(function(f){return activeFamilyFilter==='All'||f.member===activeFamilyFilter});
       var homeCount=dayFs.length;
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="fsDayClick(event,this.dataset.date)">';
+      var holHtml2='';
+      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';holHtml2='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
-      if(homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homeCount+'</div>';
+      html+=holHtml2;
+      if(!hol&&homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homeCount+'</div>';
       html+='</div>';
-      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+hol.short+'</div>'}
       dayFs.slice(0,4).forEach(function(f){
         var c=HC[f.member]||HC.Family;
         var avail=f.room_available!==false;
