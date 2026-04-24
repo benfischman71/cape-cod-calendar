@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Cape Cod">
+<meta name="apple-mobile-web-app-title" content="Fischman Cape House">
 <meta name="theme-color" content="#1a1a18">
-<title>Cape Cod House — Summer 2025</title>
+<title>Fischman Cape House — Summer 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -178,8 +178,8 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 
 <div class="auth-screen" id="authScreen">
   <div class="auth-card">
-    <h1>Cape Cod House</h1>
-    <p>Summer 2025 &nbsp;·&nbsp; Family Calendar</p>
+    <h1>Fischman Cape House</h1>
+    <p>Summer 2026 &nbsp;·&nbsp; Family Calendar</p>
     <input type="password" id="authPassword" placeholder="Family password" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button class="auth-btn" onclick="doLogin()">Enter</button>
     <div class="auth-err" id="authErr">Incorrect password — try again</div>
@@ -189,7 +189,7 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 <div class="app" id="appShell">
   <div class="header">
     <div class="header-left">
-      <h1>Cape Cod House &nbsp;·&nbsp; Summer 2025</h1>
+      <h1>Fischman Cape House &nbsp;·&nbsp; Summer 2026</h1>
       <p id="headerMeta">Loading...</p>
     </div>
     <div class="header-right">
@@ -248,8 +248,8 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
       </div>
 
       <div class="two">
-        <div class="fl"><label>Arrival</label><input type="date" id="fStart" min="2025-05-01" max="2025-09-30" onchange="onArrivalChange()"/></div>
-        <div class="fl"><label>Departure</label><input type="date" id="fEnd" min="2025-05-02" max="2025-10-01"/></div>
+        <div class="fl"><label>Arrival</label><input type="date" id="fStart" min="2026-05-01" max="2026-09-30" onchange="onArrivalChange()"/></div>
+        <div class="fl"><label>Departure</label><input type="date" id="fEnd" min="2026-05-02" max="2026-10-01"/></div>
       </div>
 
       <div class="fl">
@@ -330,16 +330,16 @@ var HC={
   Family:{bg:'#F1EFE8',bdr:'#5F5E5A',txt:'#444441'}
 };
 var HOLIDAYS={
-  '2025-05-26':{label:'Memorial Day',type:'holiday'},
-  '2025-06-15':{label:"Father's Day",type:'holiday'},
-  '2025-06-18':{label:"Ben's birthday",type:'birthday'},
-  '2025-06-29':{label:"Corey's birthday",type:'birthday'},
-  '2025-07-04':{label:'4th of July',type:'holiday'},
-  '2025-07-08':{label:"Steve's birthday",type:'birthday'},
-  '2025-08-01':{label:"Wendy's birthday",type:'birthday'},
-  '2025-08-02':{label:'🚴 PMC',type:'holiday'}
+  '2026-05-26':{label:'Memorial Day',type:'holiday'},
+  '2026-06-15':{label:"Father's Day",type:'holiday'},
+  '2026-06-18':{label:"Ben's birthday",type:'birthday'},
+  '2026-06-29':{label:"Corey's birthday",type:'birthday'},
+  '2026-07-04':{label:'4th of July',type:'holiday'},
+  '2026-07-08':{label:"Steve's birthday",type:'birthday'},
+  '2026-08-01':{label:"Wendy's birthday",type:'birthday'},
+  '2026-08-02':{label:'🚴 PMC',type:'holiday'}
 };
-var MONTHS=[{name:'May',y:2025,m:4},{name:'June',y:2025,m:5},{name:'July',y:2025,m:6},{name:'August',y:2025,m:7}];
+var MONTHS=[{name:'May',y:2026,m:4},{name:'June',y:2026,m:5},{name:'July',y:2026,m:6},{name:'August',y:2026,m:7}];
 var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var sb=null,currentUser=null,visits=[],editingId=null,prefillDate='',activeFilter='All',detailId=null,realtimeSub=null;
 
@@ -380,7 +380,7 @@ function buildNotifyMsg(data){
     var who = r.couple_name ? ' — '+r.couple_name : '';
     return '  • '+label+who+' ('+r.people+' '+(r.people===1?'person':'people')+')';
   }).join('\n');
-  var msg = '🏡 Cape Cod update\n\n';
+  var msg = '🏡 Fischman Cape House\n\n';
   msg += data.guest_name+' added by '+data.host+'\n';
   msg += '📅 '+data.startFmt+' → '+data.endFmt+' ('+data.nights+' nights)\n';
   msg += '🛏 '+data.rooms.length+' room'+(data.rooms.length!==1?'s':'')+', '+data.totalPeople+' guests:\n';
@@ -393,7 +393,7 @@ function buildNotifyMsg(data){
 function openNotify(data){
   lastSavedVisitData = data;
   var msg = buildNotifyMsg(data);
-  var subject = 'Cape Cod: '+data.guest_name+' added ('+data.startFmt+')';
+  var subject = 'Fischman Cape House: '+data.guest_name+' added ('+data.startFmt+')';
   document.getElementById('notifySmsBtn').href = 'sms:?&body='+encodeURIComponent(msg);
   document.getElementById('notifyEmailBtn').href = 'mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
   document.getElementById('notifyMsgPreview').textContent = msg;
@@ -606,10 +606,10 @@ function openNewModal(){
   editingId=null;
   ['fGuest','fNotes'].forEach(function(id){document.getElementById(id).value=''});
   document.getElementById('fHost').value='Steve';
-  var arrival = prefillDate || '2025-05-24';
+  var arrival = prefillDate || '2026-05-24';
   document.getElementById('fStart').value = arrival;
   document.getElementById('fEnd').value = '';
-  document.getElementById('fEnd').min = '2025-05-02';
+  document.getElementById('fEnd').min = '2026-05-02';
   onArrivalChange();
   ['warnErr','warnConflict','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   document.getElementById('roomRows').innerHTML='';
