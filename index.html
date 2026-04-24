@@ -14,19 +14,15 @@
 html{-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;background:#f5f0e8;color:#1a1a18;min-height:100vh}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-
-/* AUTH */
 .auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f0e8;padding:20px}
 .auth-card{background:#fff;border:1px solid #e0dbd3;border-radius:16px;padding:36px 32px;width:100%;max-width:340px;text-align:center}
 .auth-card h1{font-size:22px;font-weight:700;margin-bottom:4px}
 .auth-card p{font-size:14px;color:#888;margin-bottom:28px}
-.auth-card input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:14px;background:#faf8f5;color:#1a1a18;-webkit-appearance:none;display:block}
-.auth-card input:focus{outline:none;border-color:#185FA5}
+.auth-card input[type=password]{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:14px;background:#faf8f5;color:#1a1a18;-webkit-appearance:none;display:block}
+.auth-card input[type=password]:focus{outline:none;border-color:#185FA5}
 .auth-btn{width:100%;padding:14px;background:#185FA5;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
 .auth-btn:active{background:#0C447C}
 .auth-err{font-size:13px;color:#993C1D;margin-top:10px;display:none}
-
-/* APP */
 .app{display:none;min-height:100vh}
 .header{background:#1a1a18;color:#faf8f5;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
 .header-left{flex:1;min-width:0}
@@ -42,11 +38,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .dev-link{display:flex;align-items:center;gap:8px;font-size:13px;color:#aaa;padding:12px 16px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);min-height:44px}
 .dev-link:active{background:rgba(255,255,255,0.08)}
 .dev-refresh{display:flex;align-items:center;gap:8px;width:100%;font-size:13px;color:#aaa;padding:12px 16px;background:none;border:none;border-top:1px solid rgba(255,255,255,0.08);cursor:pointer;min-height:44px}
-
-/* MAIN */
 .main{max-width:1060px;margin:0 auto;padding:14px 10px 80px;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
-
-/* TOOLBAR */
+.view-tabs{display:flex;gap:0;margin-bottom:14px;border:1px solid #e0dbd3;border-radius:10px;overflow:hidden;background:#fff}
+.view-tab{flex:1;padding:10px 16px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:#888;transition:all .15s;min-height:42px}
+.view-tab.active{background:#185FA5;color:#fff}
 .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
 .filter-scroll{flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filter-scroll::-webkit-scrollbar{display:none}
@@ -55,16 +50,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .filter-btn.active{background:#185FA5;color:#fff;border-color:#185FA5}
 .add-visit-btn{padding:8px 14px;background:#185FA5;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;min-height:40px;flex-shrink:0}
 .add-visit-btn:active{background:#0C447C}
-
-/* LEGEND */
+.add-family-btn{padding:8px 14px;background:#3B6D11;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;min-height:40px;flex-shrink:0}
+.add-family-btn:active{background:#27500A}
 .legend{display:flex;flex-wrap:wrap;gap:5px 10px;margin-bottom:12px;align-items:center}
 .leg-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#666}
 .leg-dot{width:9px;height:9px;border-radius:2px;border:1.5px solid transparent;flex-shrink:0}
 .leg-sep{width:1px;height:12px;background:#ddd;margin:0 2px}
 .occ-leg{display:flex;align-items:center;gap:4px;font-size:11px;color:#666}
 .occ-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-
-/* MONTH */
 .month-block{background:#fff;border:1px solid #e0dbd3;border-radius:12px;overflow:hidden;margin-bottom:14px}
 .month-header{padding:10px 14px 8px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:3px;border-bottom:1px solid #f0ece4;background:#faf8f5}
 .month-name{font-size:15px;font-weight:700}
@@ -87,8 +80,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .pill-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
 .pill-pax{flex-shrink:0;opacity:0.7;font-size:7px}
 .more-tag{font-size:8px;color:#aaa;padding:0 2px}
-
-/* MODAL — bottom sheet mobile, centered desktop */
+.family-pill{font-size:8px;font-weight:600;padding:2px 4px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.4;border-left:2px solid transparent;display:flex;align-items:center;gap:2px}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom)}
@@ -107,11 +99,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .btn-cancel{padding:12px 18px;font-size:15px;background:transparent;border:1px solid #ddd;border-radius:10px;cursor:pointer;color:#888;min-height:48px}
 .btn-save{padding:12px 22px;font-size:15px;background:#185FA5;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;min-height:48px;flex:1}
 .btn-save:active{background:#0C447C}
+.btn-save-green{padding:12px 22px;font-size:15px;background:#3B6D11;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;min-height:48px;flex:1}
 .warn-box{font-size:13px;padding:10px 12px;border-radius:8px;display:none;line-height:1.5}
 .warn-err{background:#FAECE7;color:#993C1D;border:1px solid rgba(153,60,29,0.2)}
 .warn-cap{background:#FAEEDA;color:#854F0B;border:1px solid rgba(133,79,11,0.2)}
-
-/* DETAIL — bottom sheet mobile, centered desktop */
+.warn-blocked{background:#FCEBEB;color:#A32D2D;border:1px solid rgba(163,45,45,0.2)}
 .detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;justify-content:center}
 .detail-overlay.open{display:flex}
 .detail-card{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom)}
@@ -127,24 +119,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .btn-del{padding:12px 16px;font-size:14px;background:#FAECE7;color:#993C1D;border:1px solid rgba(153,60,29,0.25);border-radius:10px;cursor:pointer;min-height:48px}
 .btn-edit{padding:12px 16px;font-size:14px;background:#E6F1FB;color:#0C447C;border:1px solid rgba(24,95,165,0.25);border-radius:10px;cursor:pointer;min-height:48px}
 .btn-back{padding:12px 16px;font-size:14px;background:transparent;border:1px solid #ddd;border-radius:10px;cursor:pointer;color:#888;min-height:48px}
-
-/* TOAST */
+.room-avail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
+.room-avail-card{border-radius:8px;padding:7px 8px;font-size:10px;font-weight:600;border:1px solid transparent;line-height:1.3}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a18;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .loading-bar{height:3px;background:#185FA5;width:0;transition:width .4s;position:fixed;top:0;left:0;z-index:9999}
-
-/* DESKTOP */
 @media(min-width:640px){
   .main{padding:20px 24px 60px}
   .header{padding:14px 28px}
   .header-left h1{font-size:17px}
   .modal-overlay,.detail-overlay{align-items:center}
-  .modal{border-radius:16px;width:460px;max-height:90vh}
+  .modal{border-radius:16px;width:480px;max-height:90vh}
   .modal-handle{display:none}
-  .detail-card{border-radius:16px;width:440px;max-height:86vh}
+  .detail-card{border-radius:16px;width:460px;max-height:86vh}
   .day-cell{min-height:88px;padding:5px 4px 3px;gap:2px}
   .day-num{font-size:12px;width:22px;height:22px}
-  .event-pill{font-size:9px;padding:2px 5px}
+  .event-pill,.family-pill{font-size:9px;padding:2px 5px}
   .pill-pax{font-size:8px}
   .more-tag{font-size:9px}
   .pax-badge{font-size:9px;padding:1px 5px}
@@ -152,27 +142,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
   .filter-scroll{overflow:visible}
   .filter-row{width:auto;flex-wrap:wrap}
   .fl input,.fl select,.fl textarea{font-size:14px;padding:9px 12px}
-  .btn-save{flex:none;min-height:40px;font-size:13px;padding:8px 18px}
+  .btn-save,.btn-save-green{flex:none;min-height:40px;font-size:13px;padding:8px 18px}
   .btn-cancel,.btn-del,.btn-edit,.btn-back{min-height:40px;font-size:13px;padding:8px 14px}
   .modal-close{min-width:auto;min-height:auto}
   .modal-header h3{font-size:16px}
+  .room-avail-grid{grid-template-columns:repeat(5,1fr)}
 }
 @media(min-width:900px){
   .main{padding:24px 28px 60px}
   .header-left h1{font-size:18px}
   .header-left p{font-size:12px}
+  .room-avail-grid{grid-template-columns:repeat(9,1fr)}
 }
 </style>
 </head>
 <body>
-
 <script>
 const SUPABASE_URL = 'https://shfdqitsdbvqeexaxjpf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZmRxaXRzZGJ2cWVleGF4anBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTQzOTksImV4cCI6MjA5MjYzMDM5OX0.neiTcunpNsIBll46E3Bt9WIH-4NbHbLDRISQUu0FMxs';
 const FAMILY_EMAIL = 'family@capecod.house';
 const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 </script>
-
 <div class="loading-bar" id="loadingBar"></div>
 <div class="toast" id="toast"></div>
 
@@ -211,15 +201,33 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
     </div>
   </div>
   <div class="main">
-    <div class="toolbar">
-      <div class="filter-scroll"><div class="filter-row" id="hostFilters"></div></div>
-      <button class="add-visit-btn" onclick="openNewModal()">+ Add</button>
+    <div class="view-tabs">
+      <button class="view-tab active" id="tabGuests" onclick="switchView('guests')">🏖 Guest visits</button>
+      <button class="view-tab" id="tabFamily" onclick="switchView('family')">🏠 Family schedule</button>
     </div>
-    <div class="legend" id="legend"></div>
-    <div id="calendarContainer"></div>
+    <div id="guestView">
+      <div class="toolbar">
+        <div class="filter-scroll"><div class="filter-row" id="hostFilters"></div></div>
+        <button class="add-visit-btn" onclick="openNewModal()">+ Add visit</button>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div id="calendarContainer"></div>
+    </div>
+    <div id="familyView" style="display:none">
+      <div class="toolbar">
+        <div class="filter-scroll"><div class="filter-row" id="familyFilters"></div></div>
+        <button class="add-family-btn" onclick="openFamilyModal()">+ Add my dates</button>
+      </div>
+      <div id="familyLegend" style="display:flex;flex-wrap:wrap;gap:5px 10px;margin-bottom:12px;align-items:center;font-size:11px;color:#666">
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:9px;height:9px;border-radius:2px;background:#EAF3DE;border:1.5px solid #3B6D11"></div>Room open for guests</div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:9px;height:9px;border-radius:2px;background:#FAECE7;border:1.5px solid #993C1D"></div>Room unavailable</div>
+      </div>
+      <div id="familyCalContainer"></div>
+    </div>
   </div>
 </div>
 
+<!-- GUEST VISIT MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -228,17 +236,14 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
       <button class="modal-close" onclick="closeModal()">&#215;</button>
     </div>
     <div class="modal-body">
-
-      <div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:12px;color:#888;line-height:1.5" id="formHint">
+      <div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:12px;color:#888;line-height:1.5">
         Start with the visit name, then add a room for each couple or group of people staying together.
       </div>
-
       <div class="fl">
         <label>Visit name</label>
-        <input id="fGuest" placeholder="e.g. Florida Friends, The Hendersons, Mike & Sarah" autocomplete="off"/>
+        <input id="fGuest" placeholder="e.g. Florida Friends, The Hendersons, Mike &amp; Sarah" autocomplete="off"/>
         <div style="font-size:11px;color:#aaa;margin-top:3px">Can be a group name, couple, or individual</div>
       </div>
-
       <div class="two">
         <div class="fl">
           <label>Hosted by</label>
@@ -250,12 +255,14 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
           <div style="font-size:11px;color:#aaa;margin-top:3px">Calculated from rooms</div>
         </div>
       </div>
-
       <div class="two">
         <div class="fl"><label>Arrival</label><input type="date" id="fStart" min="2026-05-01" max="2026-09-30" onchange="onArrivalChange()"/></div>
         <div class="fl"><label>Departure</label><input type="date" id="fEnd" min="2026-05-02" max="2026-10-01"/></div>
       </div>
-
+      <div class="fl" id="roomAvailSection" style="display:none">
+        <label>Room availability for these dates</label>
+        <div class="room-avail-grid" id="roomAvailGrid"></div>
+      </div>
       <div class="fl">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
           <label style="margin-bottom:0">Rooms</label>
@@ -264,10 +271,10 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
         <div id="roomRows"></div>
         <button type="button" onclick="addRoomRow()" style="margin-top:6px;font-size:14px;color:#185FA5;background:none;border:1px dashed #185FA5;border-radius:10px;cursor:pointer;padding:10px;text-align:center;width:100%;min-height:42px">+ Add a room</button>
       </div>
-
       <div class="fl"><label>Notes</label><textarea id="fNotes" placeholder="Anything to remember..."></textarea></div>
       <div class="warn-box warn-err" id="warnErr">Please fill in visit name, arrival, and departure.</div>
       <div class="warn-box warn-err" id="warnConflict"></div>
+      <div class="warn-box warn-blocked" id="warnBlocked"></div>
       <div class="warn-box warn-cap" id="warnCap">Guest count exceeds a room's usual capacity — saved anyway.</div>
     </div>
     <div class="modal-footer">
@@ -277,8 +284,61 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
   </div>
 </div>
 
+<!-- FAMILY STAY MODAL -->
+<div class="modal-overlay" id="familyModalOverlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3 id="familyModalTitle">Add my dates</h3>
+      <button class="modal-close" onclick="closeFamilyModal()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="fl">
+        <label>Who</label>
+        <select id="fsMember"><option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
+      </div>
+      <div class="two">
+        <div class="fl"><label>Arriving</label><input type="date" id="fsStart" min="2026-05-01" max="2026-09-30" onchange="onFsArrivalChange()"/></div>
+        <div class="fl"><label>Leaving</label><input type="date" id="fsEnd" min="2026-05-02" max="2026-10-01"/></div>
+      </div>
+      <div class="fl">
+        <label>My bedroom during this stay</label>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:2px">
+          <label style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;background:#faf8f5;text-transform:none;letter-spacing:0;font-weight:400;font-size:14px">
+            <input type="radio" name="fsRoomAvail" id="fsRoomYes" value="true" checked style="margin-top:2px;width:18px;height:18px;accent-color:#3B6D11;flex-shrink:0"/>
+            <div>
+              <div style="font-weight:600;color:#27500A;font-size:14px">Open for guests</div>
+              <div style="font-size:12px;color:#888;margin-top:2px">Guests can be assigned to my bedroom while I'm here</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;background:#faf8f5;text-transform:none;letter-spacing:0;font-weight:400;font-size:14px">
+            <input type="radio" name="fsRoomAvail" id="fsRoomNo" value="false" style="margin-top:2px;width:18px;height:18px;accent-color:#993C1D;flex-shrink:0"/>
+            <div>
+              <div style="font-weight:600;color:#993C1D;font-size:14px">Unavailable — I'm using it</div>
+              <div style="font-size:12px;color:#888;margin-top:2px">My bedroom is blocked for these dates</div>
+            </div>
+          </label>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-top:6px" id="fsRoomLabel"></div>
+      </div>
+      <div class="fl"><label>Notes</label><textarea id="fsNotes" placeholder="Optional notes..."></textarea></div>
+      <div class="warn-box warn-err" id="warnFsErr">Please fill in who, arrival, and departure.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeFamilyModal()">Cancel</button>
+      <button class="btn-save-green" onclick="saveFamilyStay()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL OVERLAY -->
 <div class="detail-overlay" id="detailOverlay">
   <div class="detail-card" id="detailCard"></div>
+</div>
+
+<!-- FAMILY DETAIL OVERLAY -->
+<div class="detail-overlay" id="fsDetailOverlay">
+  <div class="detail-card" id="fsDetailCard"></div>
 </div>
 
 <!-- NOTIFY MODAL -->
@@ -293,15 +353,9 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
       <div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:13px;color:#444;white-space:pre-wrap;line-height:1.6;word-break:break-word;max-height:220px;overflow-y:auto" id="notifyMsgPreview"></div>
       <div style="font-size:12px;color:#aaa;line-height:1.5">Message is ready — choose how to send it. Your contacts app will open and you pick who gets it.</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <a id="notifySmsBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#185FA5;color:#fff;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;min-height:52px">
-          💬 Send as Text Message
-        </a>
-        <a id="notifyEmailBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#fff;color:#1a1a18;border:1px solid #ddd;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;min-height:52px">
-          ✉️ Send as Email
-        </a>
-        <button onclick="copyNotifyMsg()" style="padding:12px;font-size:14px;background:transparent;border:1px solid #e0dbd3;border-radius:10px;cursor:pointer;color:#666;min-height:44px">
-          Copy message text
-        </button>
+        <a id="notifySmsBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#185FA5;color:#fff;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;min-height:52px">💬 Send as Text Message</a>
+        <a id="notifyEmailBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#fff;color:#1a1a18;border:1px solid #ddd;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;min-height:52px">✉️ Send as Email</a>
+        <button onclick="copyNotifyMsg()" style="padding:12px;font-size:14px;background:transparent;border:1px solid #e0dbd3;border-radius:10px;cursor:pointer;color:#666;min-height:44px">Copy message text</button>
       </div>
     </div>
     <div class="modal-footer" style="justify-content:center">
@@ -311,24 +365,26 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 </div>
 
 <script>
+// ── DATA ─────────────────────────────────
 var ROOMS={
-  ns:{label:'Nancy & Steve',section:'Main house',maxPeople:2,bedDesc:'1 king'},
-  bw:{label:'Ben & Wendy',section:'Main house',maxPeople:2,bedDesc:'1 king'},
-  mol:{label:'Molly',section:'Main house',maxPeople:2,bedDesc:'1 king'},
-  bunk:{label:'Bunk room',section:'Main house',maxPeople:6,bedDesc:'1 king + 2 full bunks'},
-  og1:{label:'Over garage 1',section:'Over garage',maxPeople:2,bedDesc:'1 king'},
-  og2:{label:'Over garage 2',section:'Over garage',maxPeople:2,bedDesc:'1 king'},
-  ghu:{label:'Guest house upstairs',section:'Guest house',maxPeople:2,bedDesc:'1 king'},
-  ghr:{label:'Guest house rear',section:'Guest house',maxPeople:4,bedDesc:'2 queens'},
-  ghf:{label:'Guest house front',section:'Guest house',maxPeople:2,bedDesc:'1 king'}
+  ns:  {label:'Nancy & Steve',           section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Steve','Nancy']},
+  bw:  {label:'Ben & Wendy',             section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Ben','Wendy']},
+  mol: {label:'Molly',                   section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Molly']},
+  bunk:{label:'Bunk room – Corey',       section:'Main house',  maxPeople:6, bedDesc:'1 king + 2 full bunks',owner:['Corey']},
+  og1: {label:'Over garage 1 – TK',     section:'Over garage', maxPeople:2, bedDesc:'1 king',              owner:['TK']},
+  og2: {label:'Over garage 2 – Jake',   section:'Over garage', maxPeople:2, bedDesc:'1 king',              owner:['Jake']},
+  ghu: {label:'Guest house upstairs',   section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]},
+  ghr: {label:'Guest house rear',       section:'Guest house', maxPeople:4, bedDesc:'2 queens',            owner:[]},
+  ghf: {label:'Guest house front',      section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]}
 };
+var MEMBER_ROOM={Steve:'ns',Nancy:'ns',Ben:'bw',Wendy:'bw',Molly:'mol',TK:'og1',Jake:'og2',Corey:'bunk'};
 var HC={
   Steve:{bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A'},
   Nancy:{bg:'#E6F1FB',bdr:'#185FA5',txt:'#0C447C'},
-  Ben:{bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
+  Ben:  {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
   Wendy:{bg:'#FBEAF0',bdr:'#993556',txt:'#72243E'},
-  TK:{bg:'#EEEDFE',bdr:'#534AB7',txt:'#3C3489'},
-  Jake:{bg:'#FCEBEB',bdr:'#A32D2D',txt:'#791F1F'},
+  TK:   {bg:'#EEEDFE',bdr:'#534AB7',txt:'#3C3489'},
+  Jake: {bg:'#FCEBEB',bdr:'#A32D2D',txt:'#791F1F'},
   Molly:{bg:'#E1F5EE',bdr:'#0F6E56',txt:'#085041'},
   Corey:{bg:'#FAEEDA',bdr:'#BA7517',txt:'#854F0B'},
   Family:{bg:'#F1EFE8',bdr:'#5F5E5A',txt:'#444441'}
@@ -345,8 +401,18 @@ var HOLIDAYS={
 };
 var MONTHS=[{name:'May',y:2026,m:4},{name:'June',y:2026,m:5},{name:'July',y:2026,m:6},{name:'August',y:2026,m:7}];
 var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-var sb=null,currentUser=null,visits=[],editingId=null,prefillDate='',activeFilter='All',detailId=null,realtimeSub=null;
+var MEMBERS=['Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'];
 
+var sb=null,currentUser=null;
+var visits=[],familyStays=[];
+var editingId=null,editingFsId=null;
+var prefillDate='',activeFilter='All',activeFamilyFilter='All';
+var detailId=null,fsDetailId=null;
+var realtimeSub=null,realtimeFsSub=null;
+var currentView='guests';
+var lastSavedVisitData=null;
+
+// ── HELPERS ──────────────────────────────
 function ds(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
 function parseD(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
 function todayStr(){var t=new Date();return ds(t.getFullYear(),t.getMonth(),t.getDate())}
@@ -354,6 +420,7 @@ function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
 function fmtDate(s){return parseD(s).toLocaleDateString('en-US',{month:'short',day:'numeric'})}
 function nightCount(s,e){return Math.round((parseD(e)-parseD(s))/864e5)}
 function visitsOn(d){return visits.filter(function(v){return d>=v.start_date&&d<v.end_date})}
+function familyOn(d){return familyStays.filter(function(f){return d>=f.start_date&&d<f.end_date})}
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
 function showLoading(){document.getElementById('loadingBar').style.width='60%'}
 function hideLoading(){var b=document.getElementById('loadingBar');b.style.width='100%';setTimeout(function(){b.style.width='0'},400)}
@@ -364,76 +431,38 @@ function paxColor(n){
   if(n<=10)return{bg:'#FAEEDA',txt:'#854F0B'};
   return{bg:'#FAECE7',txt:'#993C1D'};
 }
-function hasConflict(roomId,start,end,excludeId){
+
+// Check if room is blocked by existing guest visit
+function isBlockedByGuest(roomId,start,end,excludeId){
   return visits.some(function(v){return v.id!==excludeId&&v.room===roomId&&v.start_date<end&&v.end_date>start});
 }
+// Check if room is blocked because family member has it marked unavailable
+function isBlockedByFamily(roomId,start,end){
+  var r=ROOMS[roomId];if(!r||!r.owner||r.owner.length===0)return false;
+  return familyStays.some(function(f){
+    return r.owner.indexOf(f.member)>=0&&f.room_available===false&&f.start_date<end&&f.end_date>start;
+  });
+}
+function isRoomBlocked(roomId,start,end,excludeId){
+  return isBlockedByGuest(roomId,start,end,excludeId)||isBlockedByFamily(roomId,start,end);
+}
 
+// ── DEV MENU ─────────────────────────────
 function toggleDevMenu(){document.getElementById('devMenu').classList.toggle('open')}
 function hardRefresh(){window.location.reload(true)}
 document.addEventListener('click',function(e){if(!e.target.closest('.dev-wrap')){var m=document.getElementById('devMenu');if(m)m.classList.remove('open')}});
 
-// ─────────────────────────────────────────
-// NOTIFY
-// ─────────────────────────────────────────
-var lastSavedVisitData = null;
-
-function buildNotifyMsg(data){
-  var rooms = data.rooms.map(function(r){
-    var rm = ROOMS[r.room];
-    var label = rm ? rm.label : r.room;
-    var who = r.couple_name ? ' — '+r.couple_name : '';
-    return '  • '+label+who+' ('+r.people+' '+(r.people===1?'person':'people')+')';
-  }).join('\n');
-  var msg = '🏡 Fischman Cape House\n\n';
-  msg += data.guest_name+' added by '+data.host+'\n';
-  msg += '📅 '+data.startFmt+' → '+data.endFmt+' ('+data.nights+' nights)\n';
-  msg += '🛏 '+data.rooms.length+' room'+(data.rooms.length!==1?'s':'')+', '+data.totalPeople+' guests:\n';
-  msg += rooms+'\n';
-  if(data.notes) msg += '📝 '+data.notes+'\n';
-  msg += '\n'+CALENDAR_URL;
-  return msg;
+// ── VIEW SWITCHING ────────────────────────
+function switchView(v){
+  currentView=v;
+  document.getElementById('tabGuests').classList.toggle('active',v==='guests');
+  document.getElementById('tabFamily').classList.toggle('active',v==='family');
+  document.getElementById('guestView').style.display=v==='guests'?'':'none';
+  document.getElementById('familyView').style.display=v==='family'?'':'none';
+  if(v==='family')renderFamilyCalendar();
 }
 
-function openNotify(data){
-  lastSavedVisitData = data;
-  var msg = buildNotifyMsg(data);
-  var subject = 'Fischman Cape House: '+data.guest_name+' added ('+data.startFmt+')';
-  document.getElementById('notifySmsBtn').href = 'sms:?&body='+encodeURIComponent(msg);
-  document.getElementById('notifyEmailBtn').href = 'mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
-  document.getElementById('notifyMsgPreview').textContent = msg;
-  document.getElementById('notifyOverlay').classList.add('open');
-}
-
-function closeNotify(){
-  document.getElementById('notifyOverlay').classList.remove('open');
-  lastSavedVisitData = null;
-}
-
-function copyNotifyMsg(){
-  if(!lastSavedVisitData) return;
-  var msg = buildNotifyMsg(lastSavedVisitData);
-  navigator.clipboard.writeText(msg).then(function(){
-    showToast('Message copied');
-    closeNotify();
-  }).catch(function(){
-    var el = document.getElementById('notifyMsgPreview');
-    if(el){var sel=window.getSelection(),r=document.createRange();r.selectNodeContents(el);sel.removeAllRanges();sel.addRange(r);}
-    showToast('Select all and copy');
-  });
-}
-
-function onArrivalChange(){
-  var start = document.getElementById('fStart').value;
-  var endEl = document.getElementById('fEnd');
-  if(!start) return;
-  var next = new Date(parseD(start).getTime() + 864e5);
-  var nextStr = ds(next.getFullYear(), next.getMonth(), next.getDate());
-  endEl.min = nextStr;
-  if(!endEl.value || endEl.value <= start) endEl.value = nextStr;
-}
-
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
+// ── SUPABASE ──────────────────────────────
 function initSupabase(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)}
 
 async function doLogin(){
@@ -446,74 +475,122 @@ async function doLogin(){
   if(res.error){document.getElementById('authErr').style.display='block';document.getElementById('authPassword').value=''}
   else{
     currentUser=res.data.user;
-    if(remember){
-      try{localStorage.setItem('fch_remember','1');localStorage.setItem('fch_expiry',Date.now()+(60*24*60*60*1000))}catch(e){}
-    } else {
-      try{localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry')}catch(e){}
-    }
+    if(remember){try{localStorage.setItem('fch_remember','1');localStorage.setItem('fch_expiry',Date.now()+(60*24*60*60*1000))}catch(e){}}
+    else{try{localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry')}catch(e){}}
     onLoggedIn();
   }
 }
 async function doLogout(){
-  await sb.auth.signOut();currentUser=null;visits=[];
+  await sb.auth.signOut();currentUser=null;visits=[];familyStays=[];
   try{localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry')}catch(e){}
   document.getElementById('authScreen').style.display='flex';
   document.getElementById('appShell').style.display='none';
   document.getElementById('authPassword').value='';
   document.getElementById('authErr').style.display='none';
   if(realtimeSub){sb.removeChannel(realtimeSub);realtimeSub=null}
+  if(realtimeFsSub){sb.removeChannel(realtimeFsSub);realtimeFsSub=null}
 }
 async function checkSession(){
-  try{
-    var expiry=localStorage.getItem('fch_expiry');
-    if(expiry&&Date.now()>parseInt(expiry)){
-      localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry');
-      await sb.auth.signOut();return;
-    }
-  }catch(e){}
+  try{var ex=localStorage.getItem('fch_expiry');if(ex&&Date.now()>parseInt(ex)){localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry');await sb.auth.signOut();return;}}catch(e){}
   var res=await sb.auth.getSession();
   if(res.data&&res.data.session&&res.data.session.user){currentUser=res.data.session.user;onLoggedIn()}
 }
 async function onLoggedIn(){
   document.getElementById('authScreen').style.display='none';
   document.getElementById('appShell').style.display='block';
-  await loadVisits();subscribeRealtime();renderAll();
+  await Promise.all([loadVisits(),loadFamilyStays()]);
+  subscribeRealtime();subscribeFsRealtime();renderAll();
 }
 async function loadVisits(){
-  showLoading();
   var res=await sb.from('visits').select('*').order('start_date',{ascending:true});
-  hideLoading();
-  if(res.error){showToast('Error loading');return}
-  visits=res.data||[];
+  if(!res.error)visits=res.data||[];
+}
+async function loadFamilyStays(){
+  var res=await sb.from('family_stays').select('*').order('start_date',{ascending:true});
+  if(!res.error)familyStays=res.data||[];
 }
 function subscribeRealtime(){
-  realtimeSub=sb.channel('visits-changes')
-    .on('postgres_changes',{event:'*',schema:'public',table:'visits'},function(p){
-      if(p.eventType==='INSERT'){visits.push(p.new);showToast((p.new.guest_name||'A visit')+' added')}
-      else if(p.eventType==='UPDATE'){var i=visits.findIndex(function(v){return v.id===p.new.id});if(i>=0)visits[i]=p.new;showToast('Visit updated')}
-      else if(p.eventType==='DELETE'){visits=visits.filter(function(v){return v.id!==p.old.id});showToast('Visit removed')}
-      renderAll();
-    }).subscribe();
+  realtimeSub=sb.channel('visits-ch').on('postgres_changes',{event:'*',schema:'public',table:'visits'},function(p){
+    if(p.eventType==='INSERT'){visits.push(p.new);showToast((p.new.guest_name||'A visit')+' added')}
+    else if(p.eventType==='UPDATE'){var i=visits.findIndex(function(v){return v.id===p.new.id});if(i>=0)visits[i]=p.new;showToast('Visit updated')}
+    else if(p.eventType==='DELETE'){visits=visits.filter(function(v){return v.id!==p.old.id});showToast('Visit removed')}
+    renderAll();
+  }).subscribe();
+}
+function subscribeFsRealtime(){
+  realtimeFsSub=sb.channel('fs-ch').on('postgres_changes',{event:'*',schema:'public',table:'family_stays'},function(p){
+    if(p.eventType==='INSERT'){familyStays.push(p.new);showToast(p.new.member+' added their dates')}
+    else if(p.eventType==='UPDATE'){var i=familyStays.findIndex(function(f){return f.id===p.new.id});if(i>=0)familyStays[i]=p.new;showToast('Family stay updated')}
+    else if(p.eventType==='DELETE'){familyStays=familyStays.filter(function(f){return f.id!==p.old.id});showToast('Family stay removed')}
+    renderAll();
+  }).subscribe();
+}
+
+// ── GUEST VISIT MODAL ─────────────────────
+function onArrivalChange(){
+  var start=document.getElementById('fStart').value;
+  var endEl=document.getElementById('fEnd');
+  if(!start)return;
+  var next=new Date(parseD(start).getTime()+864e5);
+  var ns=ds(next.getFullYear(),next.getMonth(),next.getDate());
+  endEl.min=ns;
+  if(!endEl.value||endEl.value<=start)endEl.value=ns;
+  updateRoomAvailability();
+}
+
+function updateRoomAvailability(){
+  var start=document.getElementById('fStart').value;
+  var end=document.getElementById('fEnd').value;
+  var sec=document.getElementById('roomAvailSection');
+  var grid=document.getElementById('roomAvailGrid');
+  if(!start||!end){sec.style.display='none';return}
+  sec.style.display='';
+  var html='';
+  Object.keys(ROOMS).forEach(function(rid){
+    var r=ROOMS[rid];
+    var byGuest=isBlockedByGuest(rid,start,end,editingId);
+    var byFamily=isBlockedByFamily(rid,start,end);
+    var blocked=byGuest||byFamily;
+    var bg=blocked?'#FAECE7':'#EAF3DE';
+    var bdr=blocked?'#993C1D':'#3B6D11';
+    var txt=blocked?'#993C1D':'#27500A';
+    var reason=byGuest?' (guest)':byFamily?' (family)':'';
+    html+='<div class="room-avail-card" style="background:'+bg+';border-color:'+bdr+';color:'+txt+'" title="'+(blocked?'Blocked'+reason:'Available')+'">';
+    html+=r.label.split(' ')[0];
+    html+='<br><span style="font-weight:400;font-size:9px">'+(blocked?'🔒 Blocked':'✓ Open')+'</span>';
+    html+='</div>';
+  });
+  grid.innerHTML=html;
 }
 
 function roomSelectHTML(selId,idx){
   var secs=['Main house','Over garage','Guest house'];
   var rbs={'Main house':['ns','bw','mol','bunk'],'Over garage':['og1','og2'],'Guest house':['ghu','ghr','ghf']};
+  var start=document.getElementById('fStart')?document.getElementById('fStart').value:'';
+  var end=document.getElementById('fEnd')?document.getElementById('fEnd').value:'';
   var h='<select onchange="updateRoomRowHint('+idx+')" id="fRoomSel'+idx+'" style="flex:1;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;color:#1a1a18;-webkit-appearance:none;appearance:none;min-width:0">';
   secs.forEach(function(sec){
     h+='<optgroup label="'+sec+'">';
-    rbs[sec].forEach(function(rid){var r=ROOMS[rid];h+='<option value="'+rid+'"'+(rid===selId?' selected':'')+'>'+r.label+'</option>'});
+    rbs[sec].forEach(function(rid){
+      var r=ROOMS[rid];
+      var blocked=start&&end&&isRoomBlocked(rid,start,end,editingId);
+      h+='<option value="'+rid+'"'+(rid===selId?' selected':'')+(blocked?' style="color:#993C1D"':'')+'>'+(blocked?'🔒 ':'')+r.label+'</option>';
+    });
     h+='</optgroup>';
   });
   return h+'</select>';
 }
+
 function addRoomRow(roomId,ppl,coupleName){
-  roomId=roomId||'og1';ppl=ppl||2;coupleName=coupleName||'';
+  roomId=roomId||'ghu';ppl=ppl||2;coupleName=coupleName||'';
   var idx=document.querySelectorAll('.room-row-wrap').length;
   var r=ROOMS[roomId];
+  var start=document.getElementById('fStart').value;
+  var end=document.getElementById('fEnd').value;
+  var blocked=start&&end&&isRoomBlocked(roomId,start,end,editingId);
   var wrap=document.createElement('div');
   wrap.className='room-row-wrap';
-  wrap.style.cssText='margin-bottom:10px;border:1px solid #e0dbd3;border-radius:12px;padding:12px 14px;background:#faf8f5';
+  wrap.style.cssText='margin-bottom:10px;border:1px solid '+(blocked?'#F0997B':'#e0dbd3')+';border-radius:12px;padding:12px 14px;background:'+(blocked?'#FFF5F2':'#faf8f5');
   wrap.innerHTML=
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
     +'<div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.04em">Room '+(idx+1)+'</div>'
@@ -521,7 +598,7 @@ function addRoomRow(roomId,ppl,coupleName){
     +'</div>'
     +'<div class="fl" style="margin-bottom:10px"><label style="font-size:11px">Bedroom</label>'
     +roomSelectHTML(roomId,idx)
-    +'<div style="font-size:11px;color:#aaa;margin-top:4px" id="fRoomHint'+idx+'">'+(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+'</div>'
+    +'<div style="font-size:11px;margin-top:4px" id="fRoomHint'+idx+'" style="color:#aaa">'+(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+(blocked?' &nbsp;·&nbsp; <span style=\'color:#993C1D;font-weight:600\'>🔒 blocked</span>':'')+'</div>'
     +'</div>'
     +'<div class="two">'
     +'<div class="fl"><label style="font-size:11px">Number of people</label>'
@@ -529,26 +606,18 @@ function addRoomRow(roomId,ppl,coupleName){
     +'<div class="fl"><label style="font-size:11px">Who\'s staying here?</label>'
     +'<input id="fCouple'+idx+'" value="'+coupleName+'" placeholder="e.g. Tom &amp; Alice" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff;color:#1a1a18;-webkit-appearance:none;width:100%"/></div>'
     +'</div>'
-    +'<div style="font-size:11px;color:#aaa;margin-top:6px;line-height:1.4">You can list any names here — one person, a couple, or the whole group in this room</div>';
+    +'<div style="font-size:11px;color:#aaa;margin-top:6px;line-height:1.4">You can list any names — one person, a couple, or the whole group in this room</div>';
   document.getElementById('roomRows').appendChild(wrap);
-  updateTotalPeople();
-  updateRoomCount();
+  updateTotalPeople();updateRoomCount();
 }
-
 function updateTotalPeople(){
   var total=0;
-  document.querySelectorAll('.room-row-wrap').forEach(function(wrap,i){
-    var ppl=document.getElementById('fPeople'+i);
-    if(ppl)total+=parseInt(ppl.value)||0;
-  });
-  var el=document.getElementById('fTotalPeople');
-  if(el)el.value=total>0?total:'';
+  document.querySelectorAll('.room-row-wrap').forEach(function(wrap,i){var p=document.getElementById('fPeople'+i);if(p)total+=parseInt(p.value)||0});
+  var el=document.getElementById('fTotalPeople');if(el)el.value=total>0?total:'';
 }
-
 function updateRoomCount(){
   var n=document.querySelectorAll('.room-row-wrap').length;
-  var el=document.getElementById('roomCount');
-  if(el)el.textContent=n+' room'+(n!==1?'s':'');
+  var el=document.getElementById('roomCount');if(el)el.textContent=n+' room'+(n!==1?'s':'');
 }
 function removeRoomRow(btn){
   var w=btn.closest('.room-row-wrap');
@@ -557,7 +626,13 @@ function removeRoomRow(btn){
 function updateRoomRowHint(idx){
   var sel=document.getElementById('fRoomSel'+idx);
   var hint=document.getElementById('fRoomHint'+idx);
-  if(sel&&hint){var r=ROOMS[sel.value];hint.textContent=r?r.bedDesc+' · sleeps up to '+r.maxPeople:''}
+  if(sel&&hint){
+    var r=ROOMS[sel.value];
+    var start=document.getElementById('fStart').value;
+    var end=document.getElementById('fEnd').value;
+    var blocked=start&&end&&isRoomBlocked(sel.value,start,end,editingId);
+    hint.innerHTML=(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+(blocked?' &nbsp;·&nbsp; <span style=\'color:#993C1D;font-weight:600\'>🔒 blocked</span>':'');
+  }
   updateTotalPeople();
 }
 function getRoomRows(){
@@ -578,44 +653,23 @@ async function saveVisit(){
   var end=document.getElementById('fEnd').value;
   var notes=document.getElementById('fNotes').value.trim();
   var rr=getRoomRows();
-  document.getElementById('warnErr').style.display='none';
-  document.getElementById('warnConflict').style.display='none';
-  document.getElementById('warnCap').style.display='none';
+  ['warnErr','warnConflict','warnBlocked','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   if(!guest||!start||!end){document.getElementById('warnErr').style.display='block';return}
   if(start>=end){document.getElementById('warnErr').style.display='block';return}
-  var cx=rr.filter(function(r){return hasConflict(r.room,start,end,editingId)});
-  if(cx.length>0){
-    document.getElementById('warnConflict').textContent='Already booked: '+cx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');
-    document.getElementById('warnConflict').style.display='block';return;
-  }
+  var cx=rr.filter(function(r){return isBlockedByGuest(r.room,start,end,editingId)});
+  if(cx.length>0){document.getElementById('warnConflict').textContent='Already booked by guests: '+cx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');document.getElementById('warnConflict').style.display='block';return}
+  var fx=rr.filter(function(r){return isBlockedByFamily(r.room,start,end)});
+  if(fx.length>0){document.getElementById('warnBlocked').textContent='Blocked — family member is using: '+fx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');document.getElementById('warnBlocked').style.display='block';return}
   if(rr.some(function(r){var rm=ROOMS[r.room];return rm&&r.people>rm.maxPeople}))document.getElementById('warnCap').style.display='block';
   showLoading();
-  var wasEditing = editingId;
+  var wasEditing=editingId;
   var res;
-  if(editingId){
-    var r=rr[0];
-    res=await sb.from('visits').update({guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}).eq('id',editingId);
-  } else {
-    res=await sb.from('visits').insert(rr.map(function(r){return{guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}}));
-  }
+  if(editingId){var r=rr[0];res=await sb.from('visits').update({guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}).eq('id',editingId)}
+  else{res=await sb.from('visits').insert(rr.map(function(r){return{guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}}))}
   hideLoading();
   if(res.error){showToast('Error saving — try again');return}
-  closeModal();
-  await loadVisits();
-  renderAll();
-  if(!wasEditing){
-    var totalPpl = rr.reduce(function(a,r){return a+(r.people||0)},0);
-    openNotify({
-      guest_name: guest,
-      host: host,
-      startFmt: fmtDate(start),
-      endFmt: fmtDate(end),
-      nights: nightCount(start,end),
-      totalPeople: totalPpl,
-      rooms: rr,
-      notes: notes
-    });
-  }
+  closeModal();await loadVisits();renderAll();
+  if(!wasEditing){var tp=rr.reduce(function(a,r){return a+(r.people||0)},0);openNotify({guest_name:guest,host:host,startFmt:fmtDate(start),endFmt:fmtDate(end),nights:nightCount(start,end),totalPeople:tp,rooms:rr,notes:notes})}
 }
 async function deleteVisit(id){
   if(!confirm('Remove this visit?'))return;
@@ -627,15 +681,15 @@ function openNewModal(){
   editingId=null;
   ['fGuest','fNotes'].forEach(function(id){document.getElementById(id).value=''});
   document.getElementById('fHost').value='Steve';
-  var arrival = prefillDate || '2026-05-24';
-  document.getElementById('fStart').value = arrival;
-  document.getElementById('fEnd').value = '';
-  document.getElementById('fEnd').min = '2026-05-02';
+  var arrival=prefillDate||'2026-05-24';
+  document.getElementById('fStart').value=arrival;
+  document.getElementById('fEnd').value='';
+  document.getElementById('fEnd').min='2026-05-02';
   onArrivalChange();
-  ['warnErr','warnConflict','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
+  ['warnErr','warnConflict','warnBlocked','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   document.getElementById('roomRows').innerHTML='';
   document.getElementById('fTotalPeople').value='';
-  addRoomRow('og1',2);
+  addRoomRow('ghu',2);
   document.getElementById('modalTitle').textContent='Add a visit';
   document.getElementById('modalOverlay').classList.add('open');
   setTimeout(function(){var g=document.getElementById('fGuest');if(g)g.focus()},350);
@@ -649,15 +703,84 @@ function openEditModal(id){
   document.getElementById('fEnd').value=v.end_date||'';
   onArrivalChange();
   document.getElementById('fNotes').value=v.notes||'';
-  ['warnErr','warnConflict','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
+  ['warnErr','warnConflict','warnBlocked','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   document.getElementById('roomRows').innerHTML='';
   document.getElementById('fTotalPeople').value='';
-  addRoomRow(v.room||'og1',v.people||2,v.couple_name||'');
+  addRoomRow(v.room||'ghu',v.people||2,v.couple_name||'');
   document.getElementById('modalTitle').textContent='Edit visit';
   closeDetail();
   document.getElementById('modalOverlay').classList.add('open');
 }
 
+// ── FAMILY STAY MODAL ─────────────────────
+function onFsArrivalChange(){
+  var start=document.getElementById('fsStart').value;
+  var endEl=document.getElementById('fsEnd');
+  if(!start)return;
+  var next=new Date(parseD(start).getTime()+864e5);
+  var ns=ds(next.getFullYear(),next.getMonth(),next.getDate());
+  endEl.min=ns;
+  if(!endEl.value||endEl.value<=start)endEl.value=ns;
+  updateFsRoomLabel();
+}
+function updateFsRoomLabel(){
+  var member=document.getElementById('fsMember').value;
+  var roomId=MEMBER_ROOM[member];
+  var r=ROOMS[roomId];
+  var el=document.getElementById('fsRoomLabel');
+  if(el)el.textContent=r?'Your bedroom: '+r.label+' ('+r.bedDesc+')':'No private bedroom assigned';
+}
+function openFamilyModal(id){
+  if(id){
+    var f=familyStays.find(function(x){return x.id===id});if(!f)return;
+    editingFsId=id;
+    document.getElementById('fsMember').value=f.member;
+    document.getElementById('fsStart').value=f.start_date||'';
+    document.getElementById('fsEnd').value=f.end_date||'';
+    document.getElementById('fsNotes').value=f.notes||'';
+    document.getElementById('fsRoomYes').checked=f.room_available!==false;
+    document.getElementById('fsRoomNo').checked=f.room_available===false;
+    document.getElementById('familyModalTitle').textContent='Edit my dates';
+  } else {
+    editingFsId=null;
+    document.getElementById('fsMember').value='Steve';
+    document.getElementById('fsStart').value=prefillDate||'2026-05-24';
+    document.getElementById('fsEnd').value='';
+    onFsArrivalChange();
+    document.getElementById('fsNotes').value='';
+    document.getElementById('fsRoomYes').checked=true;
+    document.getElementById('familyModalTitle').textContent='Add my dates';
+  }
+  document.getElementById('warnFsErr').style.display='none';
+  updateFsRoomLabel();
+  closeFsDetail();
+  document.getElementById('familyModalOverlay').classList.add('open');
+}
+function closeFamilyModal(){document.getElementById('familyModalOverlay').classList.remove('open');editingFsId=null}
+async function saveFamilyStay(){
+  var member=document.getElementById('fsMember').value;
+  var start=document.getElementById('fsStart').value;
+  var end=document.getElementById('fsEnd').value;
+  var notes=document.getElementById('fsNotes').value.trim();
+  var roomAvail=document.getElementById('fsRoomYes').checked;
+  document.getElementById('warnFsErr').style.display='none';
+  if(!member||!start||!end){document.getElementById('warnFsErr').style.display='block';return}
+  if(start>=end){document.getElementById('warnFsErr').style.display='block';return}
+  showLoading();
+  var payload={member:member,start_date:start,end_date:end,room_available:roomAvail,notes:notes||null};
+  var res;
+  if(editingFsId)res=await sb.from('family_stays').update(payload).eq('id',editingFsId);
+  else res=await sb.from('family_stays').insert([payload]);
+  hideLoading();
+  if(res.error){showToast('Error saving — try again');return}
+  closeFamilyModal();await loadFamilyStays();renderAll();
+}
+async function deleteFamilyStay(id){
+  if(!confirm('Remove this entry?'))return;
+  showLoading();await sb.from('family_stays').delete().eq('id',id);hideLoading();closeFsDetail();await loadFamilyStays();renderAll();
+}
+
+// ── DETAIL PANELS ─────────────────────────
 function openDetail(id){
   detailId=id;
   var v=visits.find(function(x){return x.id===id});if(!v)return;
@@ -666,28 +789,22 @@ function openDetail(id){
   var n=nightCount(v.start_date,v.end_date);
   var oc=r&&v.people>r.maxPeople;
   var h='<div style="width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 8px"></div>';
-  h+='<div class="color-bar" style="background:'+c.bdr+'"></div>';
-  h+='<div class="detail-body">';
+  h+='<div class="color-bar" style="background:'+c.bdr+'"></div><div class="detail-body">';
   h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">';
-  h+='<div style="flex:1;min-width:0"><div class="dc-label">Guests</div>';
-  h+='<div style="font-size:18px;font-weight:700;margin-bottom:8px;word-break:break-word">'+(v.guest_name||'')+'</div>';
+  h+='<div style="flex:1;min-width:0"><div class="dc-label">Guests</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;word-break:break-word">'+(v.guest_name||'')+'</div>';
   h+='<span style="display:inline-block;padding:3px 12px;border-radius:10px;font-size:13px;font-weight:600;background:'+c.bg+';color:'+c.txt+';border:1px solid '+c.bdr+'">hosted by '+(v.host||'')+'</span></div>';
-  h+='<div style="text-align:right;margin-left:12px;flex-shrink:0"><div class="dc-label">People</div>';
-  h+='<div class="big-num">'+(v.people||'')+'</div>';
+  h+='<div style="text-align:right;margin-left:12px;flex-shrink:0"><div class="dc-label">People</div><div class="big-num">'+(v.people||'')+'</div>';
   h+=(oc?'<div style="font-size:10px;color:#993C1D;margin-top:2px">over capacity</div>':'<div style="font-size:10px;color:#aaa;margin-top:2px">of '+(r?r.maxPeople:'?')+' max</div>');
   h+='</div></div>';
-  h+='<div class="stat-grid">';
-  h+='<div class="stat-box"><div class="dc-label">Room</div><div style="font-size:12px;font-weight:600;line-height:1.3">'+(r?r.label:v.room)+'</div></div>';
+  h+='<div class="stat-grid"><div class="stat-box"><div class="dc-label">Room</div><div style="font-size:12px;font-weight:600;line-height:1.3">'+(r?r.label:v.room)+'</div></div>';
   h+='<div class="stat-box"><div class="dc-label">Beds</div><div style="font-size:12px;font-weight:600">'+(r?r.bedDesc:'—')+'</div></div>';
   h+='<div class="stat-box"><div class="dc-label">Arrival</div><div style="font-size:12px;font-weight:600">'+fmtDate(v.start_date)+'</div></div>';
-  h+='<div class="stat-box"><div class="dc-label">Nights</div><div style="font-size:12px;font-weight:600">'+n+'</div></div>';
-  h+='</div>';
+  h+='<div class="stat-box"><div class="dc-label">Nights</div><div style="font-size:12px;font-weight:600">'+n+'</div></div></div>';
   h+='<div class="dc-row"><div class="dc-label">Departure</div><div class="dc-val">'+fmtDate(v.end_date)+'</div></div>';
   if(r)h+='<div class="dc-row"><div class="dc-label">Area</div><div class="dc-val">'+r.section+'</div></div>';
   if(v.couple_name)h+='<div class="dc-row"><div class="dc-label">Room guests</div><div class="dc-val" style="font-weight:600">'+v.couple_name+'</div></div>';
-  if(v.notes)h+='<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+(v.notes)+'</div></div>';
-  h+='</div>';
-  h+='<div class="detail-footer"><button class="btn-del" data-did="'+id+'" onclick="deleteVisit(this.dataset.did)">Delete</button>';
+  if(v.notes)h+='<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+v.notes+'</div></div>';
+  h+='</div><div class="detail-footer"><button class="btn-del" data-did="'+id+'" onclick="deleteVisit(this.dataset.did)">Delete</button>';
   h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-eid="'+id+'" onclick="openEditModal(this.dataset.eid)">Edit</button>';
   h+='<button class="btn-back" onclick="closeDetail()">Close</button></div></div>';
   document.getElementById('detailCard').innerHTML=h;
@@ -695,14 +812,68 @@ function openDetail(id){
 }
 function closeDetail(){document.getElementById('detailOverlay').classList.remove('open');detailId=null}
 
+function openFsDetail(id){
+  fsDetailId=id;
+  var f=familyStays.find(function(x){return x.id===id});if(!f)return;
+  var c=HC[f.member]||HC.Family;
+  var n=nightCount(f.start_date,f.end_date);
+  var roomId=MEMBER_ROOM[f.member];
+  var r=ROOMS[roomId];
+  var avail=f.room_available!==false;
+  var h='<div style="width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 8px"></div>';
+  h+='<div class="color-bar" style="background:'+c.bdr+'"></div><div class="detail-body">';
+  h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">';
+  h+='<div><div class="dc-label">Family member</div><div style="font-size:20px;font-weight:700;margin-bottom:8px">'+f.member+'</div>';
+  h+='<span style="display:inline-block;padding:3px 12px;border-radius:10px;font-size:13px;font-weight:600;background:'+(avail?'#EAF3DE':'#FAECE7')+';color:'+(avail?'#27500A':'#993C1D')+';border:1px solid '+(avail?'#3B6D11':'#993C1D')+'">'+(avail?'✓ Room open for guests':'🔒 Room unavailable')+'</span></div></div>';
+  h+='<div class="stat-grid"><div class="stat-box"><div class="dc-label">Bedroom</div><div style="font-size:12px;font-weight:600;line-height:1.3">'+(r?r.label:'—')+'</div></div>';
+  h+='<div class="stat-box"><div class="dc-label">Arriving</div><div style="font-size:12px;font-weight:600">'+fmtDate(f.start_date)+'</div></div>';
+  h+='<div class="stat-box"><div class="dc-label">Leaving</div><div style="font-size:12px;font-weight:600">'+fmtDate(f.end_date)+'</div></div>';
+  h+='<div class="stat-box"><div class="dc-label">Nights</div><div style="font-size:12px;font-weight:600">'+n+'</div></div></div>';
+  if(f.notes)h+='<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+f.notes+'</div></div>';
+  h+='</div><div class="detail-footer"><button class="btn-del" data-fsid="'+id+'" onclick="deleteFamilyStay(this.dataset.fsid)">Delete</button>';
+  h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-feid="'+id+'" onclick="openFamilyModal(this.dataset.feid)">Edit</button>';
+  h+='<button class="btn-back" onclick="closeFsDetail()">Close</button></div></div>';
+  document.getElementById('fsDetailCard').innerHTML=h;
+  document.getElementById('fsDetailOverlay').classList.add('open');
+}
+function closeFsDetail(){document.getElementById('fsDetailOverlay').classList.remove('open');fsDetailId=null}
+
+// ── NOTIFY ────────────────────────────────
+function buildNotifyMsg(data){
+  var rooms=data.rooms.map(function(r){var rm=ROOMS[r.room];var label=rm?rm.label:r.room;var who=r.couple_name?' — '+r.couple_name:'';return '  • '+label+who+' ('+r.people+' '+(r.people===1?'person':'people')+')'}).join('\n');
+  var msg='🏡 Fischman Cape House\n\n'+data.guest_name+' added by '+data.host+'\n'+'📅 '+data.startFmt+' → '+data.endFmt+' ('+data.nights+' nights)\n'+'🛏 '+data.rooms.length+' room'+(data.rooms.length!==1?'s':'')+', '+data.totalPeople+' guests:\n'+rooms+'\n';
+  if(data.notes)msg+='📝 '+data.notes+'\n';
+  msg+='\n'+CALENDAR_URL;return msg;
+}
+function openNotify(data){
+  lastSavedVisitData=data;
+  var msg=buildNotifyMsg(data);
+  var subj='Fischman Cape House: '+data.guest_name+' added ('+data.startFmt+')';
+  document.getElementById('notifySmsBtn').href='sms:?&body='+encodeURIComponent(msg);
+  document.getElementById('notifyEmailBtn').href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(msg);
+  document.getElementById('notifyMsgPreview').textContent=msg;
+  document.getElementById('notifyOverlay').classList.add('open');
+}
+function closeNotify(){document.getElementById('notifyOverlay').classList.remove('open');lastSavedVisitData=null}
+function copyNotifyMsg(){
+  if(!lastSavedVisitData)return;
+  var msg=buildNotifyMsg(lastSavedVisitData);
+  navigator.clipboard.writeText(msg).then(function(){showToast('Message copied');closeNotify()}).catch(function(){showToast('Select all and copy')});
+}
+
+// ── FILTERS & LEGEND ─────────────────────
 function renderFilters(){
-  document.getElementById('hostFilters').innerHTML=
-    ['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'].map(function(h){
-      return'<button class="filter-btn'+(h===activeFilter?' active':'')+'" data-fh="'+h+'" onclick="setFilter(this.dataset.fh)">'+h+'</button>';
-    }).join('');
+  document.getElementById('hostFilters').innerHTML=['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'].map(function(h){
+    return'<button class="filter-btn'+(h===activeFilter?' active':'')+'\" data-fh="'+h+'" onclick="setFilter(this.dataset.fh)">'+h+'</button>';
+  }).join('');
 }
 function setFilter(h){activeFilter=h;renderFilters();renderCalendar()}
-
+function renderFamilyFilters(){
+  document.getElementById('familyFilters').innerHTML=['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'].map(function(h){
+    return'<button class="filter-btn'+(h===activeFamilyFilter?' active':'')+'\" data-fh="'+h+'" onclick="setFamilyFilter(this.dataset.fh)">'+h+'</button>';
+  }).join('');
+}
+function setFamilyFilter(h){activeFamilyFilter=h;renderFamilyFilters();renderFamilyCalendar()}
 function renderLegend(){
   var html='';
   Object.keys(HC).forEach(function(host){var c=HC[host];html+='<div class="leg-item"><div class="leg-dot" style="background:'+c.bg+';border-color:'+c.bdr+'"></div>'+host+'</div>'});
@@ -713,6 +884,7 @@ function renderLegend(){
   document.getElementById('legend').innerHTML=html;
 }
 
+// ── GUEST CALENDAR ────────────────────────
 function renderCalendar(){
   var today=todayStr();
   var filtered=activeFilter==='All'?visits:visits.filter(function(v){return v.host===activeFilter});
@@ -720,40 +892,27 @@ function renderCalendar(){
   document.getElementById('headerMeta').textContent=visits.length+' visits · '+totalPeople+' guests this summer';
   var html='';
   MONTHS.forEach(function(mo){
-    var days=daysInMonth(mo.y,mo.m);
-    var first=new Date(mo.y,mo.m,1).getDay();
+    var days=daysInMonth(mo.y,mo.m);var first=new Date(mo.y,mo.m,1).getDay();
     var mV=filtered.filter(function(v){var ms=ds(mo.y,mo.m,1),me=ds(mo.y,mo.m,days);return v.start_date<=me&&v.end_date>ms});
     var peakPax=Math.max.apply(null,[0].concat(Array.from({length:days},function(_,i){return peopleOn(ds(mo.y,mo.m,i+1))})));
     var mPpl=mV.reduce(function(a,v){return a+(v.people||0)},0);
-    html+='<div class="month-block">';
-    html+='<div class="month-header"><span class="month-name">'+mo.name+'</span><span class="month-meta">'+mV.length+' visit'+(mV.length!==1?'s':'')+' · '+mPpl+' guests · peak '+peakPax+'</span></div>';
+    html+='<div class="month-block"><div class="month-header"><span class="month-name">'+mo.name+'</span><span class="month-meta">'+mV.length+' visit'+(mV.length!==1?'s':'')+' · '+mPpl+' guests · peak '+peakPax+'</span></div>';
     html+='<div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell"><span aria-hidden="true">'+d[0]+'</span><span class="sr-only">'+d+'</span></div>'}).join('')+'</div>';
     html+='<div class="cal-grid">';
-    for(var i=0;i<first;i++)html+='<div class="day-cell empty" aria-hidden="true"></div>';
+    for(var i=0;i<first;i++)html+='<div class="day-cell empty"></div>';
     for(var d=1;d<=days;d++){
       var dateS=ds(mo.y,mo.m,d);
       var dow=new Date(mo.y,mo.m,d).getDay();
-      var isToday=dateS===today;
-      var isWknd=dow===0||dow===6;
+      var isToday=dateS===today;var isWknd=dow===0||dow===6;
       var dv=visitsOn(dateS).filter(function(v){return activeFilter==='All'||v.host===activeFilter});
-      var pax=peopleOn(dateS);
-      var pc=paxColor(pax);
-      var hol=HOLIDAYS[dateS];
-      html+='<div class="day-cell'+(isWknd?' weekend':'')+'" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
-      html+='<div class="day-top">';
-      html+='<div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
+      var pax=peopleOn(dateS);var pc=paxColor(pax);var hol=HOLIDAYS[dateS];
+      html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
+      html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       if(pax>0)html+='<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'">'+pax+'</div>';
       html+='</div>';
-      if(hol){
-        var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';
-        var hbdr=hol.type==='birthday'?'#993556':'#854F0B';
-        var htxt=hol.type==='birthday'?'#72243E':'#633806';
-        html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+(hol.type==='birthday'?'🎂 ':'')+hol.label+'</div>';
-      }
+      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+(hol.type==='birthday'?'🎂 ':'')+hol.label+'</div>'}
       dv.slice(0,3).forEach(function(v){
-        var c=HC[v.host]||HC.Family;
-        var isStart=dateS===v.start_date;
-        var lbl=isStart?(v.couple_name||v.guest_name||''):'';
+        var c=HC[v.host]||HC.Family;var isStart=dateS===v.start_date;var lbl=isStart?(v.couple_name||v.guest_name||''):'';
         html+='<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)">';
         html+='<span class="pill-name">'+(lbl||'&nbsp;')+'</span>';
         if(isStart)html+='<span class="pill-pax">'+(v.people||'')+'p</span>';
@@ -762,20 +921,78 @@ function renderCalendar(){
       if(dv.length>3)html+='<div class="more-tag">+'+(dv.length-3)+'</div>';
       html+='</div>';
     }
-    var rem=(7-(first+days)%7)%7;
-    for(var j=0;j<rem;j++)html+='<div class="day-cell empty" aria-hidden="true"></div>';
+    var rem=(7-(first+days)%7)%7;for(var j=0;j<rem;j++)html+='<div class="day-cell empty"></div>';
     html+='</div></div>';
   });
   document.getElementById('calendarContainer').innerHTML=html;
 }
 
+// ── FAMILY CALENDAR ───────────────────────
+function renderFamilyCalendar(){
+  renderFamilyFilters();
+  var today=todayStr();
+  var filtered=activeFamilyFilter==='All'?familyStays:familyStays.filter(function(f){return f.member===activeFamilyFilter});
+  var html='';
+  MONTHS.forEach(function(mo){
+    var days=daysInMonth(mo.y,mo.m);var first=new Date(mo.y,mo.m,1).getDay();
+    var mF=filtered.filter(function(f){var ms=ds(mo.y,mo.m,1),me=ds(mo.y,mo.m,days);return f.start_date<=me&&f.end_date>ms});
+    var members=Array.from(new Set(mF.map(function(f){return f.member}))).join(', ');
+    html+='<div class="month-block"><div class="month-header"><span class="month-name">'+mo.name+'</span><span class="month-meta">'+mF.length+' stay'+(mF.length!==1?'s':''+(mF.length>0?' · '+members:''))+'</span></div>';
+    html+='<div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell"><span aria-hidden="true">'+d[0]+'</span><span class="sr-only">'+d+'</span></div>'}).join('')+'</div>';
+    html+='<div class="cal-grid">';
+    for(var i=0;i<first;i++)html+='<div class="day-cell empty"></div>';
+    for(var d=1;d<=days;d++){
+      var dateS=ds(mo.y,mo.m,d);
+      var dow=new Date(mo.y,mo.m,d).getDay();
+      var isToday=dateS===today;var isWknd=dow===0||dow===6;
+      var hol=HOLIDAYS[dateS];
+      var dayFs=familyOn(dateS).filter(function(f){return activeFamilyFilter==='All'||f.member===activeFamilyFilter});
+      var homeCount=dayFs.length;
+      html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="fsDayClick(event,this.dataset.date)">';
+      html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
+      if(homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homeCount+'</div>';
+      html+='</div>';
+      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+(hol.type==='birthday'?'🎂 ':'')+hol.label+'</div>'}
+      dayFs.slice(0,4).forEach(function(f){
+        var c=HC[f.member]||HC.Family;
+        var avail=f.room_available!==false;
+        var isStart=dateS===f.start_date;
+        html+='<div class="family-pill" style="background:'+(avail?c.bg:'#FAECE7')+';color:'+(avail?c.txt:'#993C1D')+';border-left-color:'+(avail?c.bdr:'#993C1D')+'" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">';
+        html+=isStart?(avail?'':'🔒 ')+f.member:'&nbsp;';
+        html+='</div>';
+      });
+      if(dayFs.length>4)html+='<div class="more-tag">+'+(dayFs.length-4)+'</div>';
+      html+='</div>';
+    }
+    var rem=(7-(first+days)%7)%7;for(var j=0;j<rem;j++)html+='<div class="day-cell empty"></div>';
+    html+='</div></div>';
+  });
+  document.getElementById('familyCalContainer').innerHTML=html;
+}
+
 function dayClick(e,date){if(e.target.closest('.event-pill'))return;prefillDate=date;openNewModal()}
 function pillClick(e,id){e.stopPropagation();openDetail(id)}
-function renderAll(){renderFilters();renderLegend();renderCalendar()}
+function fsDayClick(e,date){if(e.target.closest('.family-pill'))return;prefillDate=date;openFamilyModal()}
+function fsPillClick(e,id){e.stopPropagation();openFsDetail(id)}
 
-document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
-document.getElementById('detailOverlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
-document.getElementById('notifyOverlay').addEventListener('click',function(e){if(e.target===this)closeNotify()});
+function renderAll(){
+  renderFilters();renderLegend();renderCalendar();
+  if(currentView==='family')renderFamilyCalendar();
+}
+
+// ── CLICK OUTSIDE ─────────────────────────
+['modalOverlay','detailOverlay','familyModalOverlay','fsDetailOverlay','notifyOverlay'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el)el.addEventListener('click',function(e){
+    if(e.target===this){
+      if(id==='modalOverlay')closeModal();
+      else if(id==='detailOverlay')closeDetail();
+      else if(id==='familyModalOverlay')closeFamilyModal();
+      else if(id==='fsDetailOverlay')closeFsDetail();
+      else if(id==='notifyOverlay')closeNotify();
+    }
+  });
+});
 
 initSupabase();
 checkSession();
