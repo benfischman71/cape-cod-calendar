@@ -181,6 +181,10 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
     <h1>Fischman Cape House</h1>
     <p>Summer 2026 &nbsp;·&nbsp; Family Calendar</p>
     <input type="password" id="authPassword" placeholder="Family password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#888;cursor:pointer;margin-bottom:14px;justify-content:center">
+      <input type="checkbox" id="rememberMe" checked style="width:16px;height:16px;cursor:pointer;accent-color:#185FA5"/>
+      Stay signed in for 60 days
+    </label>
     <button class="auth-btn" onclick="doLogin()">Enter</button>
     <div class="auth-err" id="authErr">Incorrect password — try again</div>
   </div>
@@ -435,14 +439,24 @@ function initSupabase(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
 async function doLogin(){
   var pw=document.getElementById('authPassword').value;
   if(!pw)return;
+  var remember=document.getElementById('rememberMe').checked;
   showLoading();
   var res=await sb.auth.signInWithPassword({email:FAMILY_EMAIL,password:pw});
   hideLoading();
   if(res.error){document.getElementById('authErr').style.display='block';document.getElementById('authPassword').value=''}
-  else{currentUser=res.data.user;onLoggedIn()}
+  else{
+    currentUser=res.data.user;
+    if(remember){
+      try{localStorage.setItem('fch_remember','1');localStorage.setItem('fch_expiry',Date.now()+(60*24*60*60*1000))}catch(e){}
+    } else {
+      try{localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry')}catch(e){}
+    }
+    onLoggedIn();
+  }
 }
 async function doLogout(){
   await sb.auth.signOut();currentUser=null;visits=[];
+  try{localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry')}catch(e){}
   document.getElementById('authScreen').style.display='flex';
   document.getElementById('appShell').style.display='none';
   document.getElementById('authPassword').value='';
@@ -450,6 +464,13 @@ async function doLogout(){
   if(realtimeSub){sb.removeChannel(realtimeSub);realtimeSub=null}
 }
 async function checkSession(){
+  try{
+    var expiry=localStorage.getItem('fch_expiry');
+    if(expiry&&Date.now()>parseInt(expiry)){
+      localStorage.removeItem('fch_remember');localStorage.removeItem('fch_expiry');
+      await sb.auth.signOut();return;
+    }
+  }catch(e){}
   var res=await sb.auth.getSession();
   if(res.data&&res.data.session&&res.data.session.user){currentUser=res.data.session.user;onLoggedIn()}
 }
