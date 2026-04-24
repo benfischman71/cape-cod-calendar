@@ -247,7 +247,7 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
       <div class="two">
         <div class="fl">
           <label>Hosted by</label>
-          <select id="fHost"><option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
+          <select id="fHost"><option>Steve &amp; Nancy</option><option>Ben &amp; Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
         </div>
         <div class="fl">
           <label>Total people</label>
@@ -295,7 +295,7 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
     <div class="modal-body">
       <div class="fl">
         <label>Who</label>
-        <select id="fsMember"><option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
+        <select id="fsMember"><option>Steve &amp; Nancy</option><option>Ben &amp; Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
       </div>
       <div class="two">
         <div class="fl"><label>Arriving</label><input type="date" id="fsStart" min="2026-05-01" max="2026-09-30" onchange="onFsArrivalChange()"/></div>
@@ -367,8 +367,8 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
 <script>
 // ── DATA ─────────────────────────────────
 var ROOMS={
-  ns:  {label:'Nancy & Steve',           section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Steve','Nancy']},
-  bw:  {label:'Ben & Wendy',             section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Ben','Wendy']},
+  ns:  {label:'Nancy & Steve',           section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Steve & Nancy']},
+  bw:  {label:'Ben & Wendy',             section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Ben & Wendy']},
   mol: {label:'Molly',                   section:'Main house',  maxPeople:2, bedDesc:'1 king',              owner:['Molly']},
   bunk:{label:'Bunk room – Corey',       section:'Main house',  maxPeople:6, bedDesc:'1 king + 2 full bunks',owner:['Corey']},
   og1: {label:'Over garage 1 – TK',     section:'Over garage', maxPeople:2, bedDesc:'1 king',              owner:['TK']},
@@ -377,12 +377,10 @@ var ROOMS={
   ghr: {label:'Guest house rear',       section:'Guest house', maxPeople:4, bedDesc:'2 queens',            owner:[]},
   ghf: {label:'Guest house front',      section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]}
 };
-var MEMBER_ROOM={Steve:'ns',Nancy:'ns',Ben:'bw',Wendy:'bw',Molly:'mol',TK:'og1',Jake:'og2',Corey:'bunk'};
+var MEMBER_ROOM={'Steve & Nancy':'ns','Ben & Wendy':'bw',Molly:'mol',TK:'og1',Jake:'og2',Corey:'bunk'};
 var HC={
-  Steve:{bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A'},
-  Nancy:{bg:'#E6F1FB',bdr:'#185FA5',txt:'#0C447C'},
-  Ben:  {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
-  Wendy:{bg:'#FBEAF0',bdr:'#993556',txt:'#72243E'},
+  'Steve & Nancy':{bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A'},
+  'Ben & Wendy': {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
   TK:   {bg:'#EEEDFE',bdr:'#534AB7',txt:'#3C3489'},
   Jake: {bg:'#FCEBEB',bdr:'#A32D2D',txt:'#791F1F'},
   Molly:{bg:'#E1F5EE',bdr:'#0F6E56',txt:'#085041'},
@@ -401,7 +399,7 @@ var HOLIDAYS={
 };
 var MONTHS=[{name:'May',y:2026,m:4},{name:'June',y:2026,m:5},{name:'July',y:2026,m:6},{name:'August',y:2026,m:7}];
 var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-var MEMBERS=['Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'];
+var MEMBERS=['Steve & Nancy','Ben & Wendy','TK','Jake','Molly','Corey'];
 
 var sb=null,currentUser=null;
 var visits=[],familyStays=[];
@@ -680,7 +678,7 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 function openNewModal(){
   editingId=null;
   ['fGuest','fNotes'].forEach(function(id){document.getElementById(id).value=''});
-  document.getElementById('fHost').value='Steve';
+  document.getElementById('fHost').value='Steve & Nancy';
   var arrival=prefillDate||'2026-05-24';
   document.getElementById('fStart').value=arrival;
   document.getElementById('fEnd').value='';
@@ -698,7 +696,7 @@ function openEditModal(id){
   var v=visits.find(function(x){return x.id===id});if(!v)return;
   editingId=id;
   document.getElementById('fGuest').value=v.guest_name||'';
-  document.getElementById('fHost').value=v.host||'Steve';
+  document.getElementById('fHost').value=v.host||'Steve & Nancy';
   document.getElementById('fStart').value=v.start_date||'';
   document.getElementById('fEnd').value=v.end_date||'';
   onArrivalChange();
@@ -743,7 +741,7 @@ function openFamilyModal(id){
     document.getElementById('familyModalTitle').textContent='Edit my dates';
   } else {
     editingFsId=null;
-    document.getElementById('fsMember').value='Steve';
+    document.getElementById('fsMember').value='Steve & Nancy';
     document.getElementById('fsStart').value=prefillDate||'2026-05-24';
     document.getElementById('fsEnd').value='';
     onFsArrivalChange();
@@ -863,13 +861,13 @@ function copyNotifyMsg(){
 
 // ── FILTERS & LEGEND ─────────────────────
 function renderFilters(){
-  document.getElementById('hostFilters').innerHTML=['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'].map(function(h){
+  document.getElementById('hostFilters').innerHTML=['All','Steve & Nancy','Ben & Wendy','TK','Jake','Molly','Corey'].map(function(h){
     return'<button class="filter-btn'+(h===activeFilter?' active':'')+'\" data-fh="'+h+'" onclick="setFilter(this.dataset.fh)">'+h+'</button>';
   }).join('');
 }
 function setFilter(h){activeFilter=h;renderFilters();renderCalendar()}
 function renderFamilyFilters(){
-  document.getElementById('familyFilters').innerHTML=['All','Steve','Nancy','Ben','Wendy','TK','Jake','Molly','Corey'].map(function(h){
+  document.getElementById('familyFilters').innerHTML=['All','Steve & Nancy','Ben & Wendy','TK','Jake','Molly','Corey'].map(function(h){
     return'<button class="filter-btn'+(h===activeFamilyFilter?' active':'')+'\" data-fh="'+h+'" onclick="setFamilyFilter(this.dataset.fh)">'+h+'</button>';
   }).join('');
 }
