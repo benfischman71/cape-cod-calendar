@@ -223,24 +223,47 @@ const FAMILY_EMAIL = 'family@capecod.house';
       <button class="modal-close" onclick="closeModal()">&#215;</button>
     </div>
     <div class="modal-body">
-      <div class="fl"><label>Group or guest name</label><input id="fGuest" placeholder="e.g. Friends from Florida" autocomplete="off"/></div>
-      <div class="fl">
-        <label>Hosted by</label>
-        <select id="fHost"><option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
+
+      <div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:12px;color:#888;line-height:1.5" id="formHint">
+        Start with the visit name, then add a room for each couple or group of people staying together.
       </div>
+
       <div class="fl">
-        <label>Rooms &amp; guests per room</label>
-        <div id="roomRows"></div>
-        <button type="button" onclick="addRoomRow()" style="margin-top:8px;font-size:14px;color:#185FA5;background:none;border:none;cursor:pointer;padding:6px 0;text-align:left;min-height:40px">+ Add another room</button>
+        <label>Visit name</label>
+        <input id="fGuest" placeholder="e.g. Florida Friends, The Hendersons, Mike & Sarah" autocomplete="off"/>
+        <div style="font-size:11px;color:#aaa;margin-top:3px">Can be a group name, couple, or individual</div>
       </div>
+
+      <div class="two">
+        <div class="fl">
+          <label>Hosted by</label>
+          <select id="fHost"><option>Steve</option><option>Nancy</option><option>Ben</option><option>Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select>
+        </div>
+        <div class="fl">
+          <label>Total people</label>
+          <input type="number" id="fTotalPeople" value="" min="1" max="40" placeholder="auto" style="text-align:center" readonly/>
+          <div style="font-size:11px;color:#aaa;margin-top:3px">Calculated from rooms</div>
+        </div>
+      </div>
+
       <div class="two">
         <div class="fl"><label>Arrival</label><input type="date" id="fStart"/></div>
         <div class="fl"><label>Departure</label><input type="date" id="fEnd"/></div>
       </div>
+
+      <div class="fl">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label style="margin-bottom:0">Rooms</label>
+          <span style="font-size:11px;color:#aaa" id="roomCount"></span>
+        </div>
+        <div id="roomRows"></div>
+        <button type="button" onclick="addRoomRow()" style="margin-top:6px;font-size:14px;color:#185FA5;background:none;border:1px dashed #185FA5;border-radius:10px;cursor:pointer;padding:10px;text-align:center;width:100%;min-height:42px">+ Add a room</button>
+      </div>
+
       <div class="fl"><label>Notes</label><textarea id="fNotes" placeholder="Anything to remember..."></textarea></div>
-      <div class="warn-box warn-err" id="warnErr">Please fill in guest name, arrival, and departure.</div>
+      <div class="warn-box warn-err" id="warnErr">Please fill in visit name, arrival, and departure.</div>
       <div class="warn-box warn-err" id="warnConflict"></div>
-      <div class="warn-box warn-cap" id="warnCap">Guest count exceeds this room's usual capacity — saved anyway.</div>
+      <div class="warn-box warn-cap" id="warnCap">Guest count exceeds a room's usual capacity — saved anyway.</div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -377,21 +400,52 @@ function addRoomRow(roomId,ppl,coupleName){
   var r=ROOMS[roomId];
   var wrap=document.createElement('div');
   wrap.className='room-row-wrap';
-  wrap.style.cssText='margin-bottom:10px;border:1px solid #e0dbd3;border-radius:12px;padding:10px 12px;background:#faf8f5';
-  wrap.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-    +roomSelectHTML(roomId,idx)
-    +'<input type="number" id="fPeople'+idx+'" value="'+ppl+'" min="1" max="12" style="width:64px;flex-shrink:0;padding:12px 8px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;text-align:center;-webkit-appearance:none"/>'
-    +'<button type="button" onclick="removeRoomRow(this)" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:24px;line-height:1;padding:0;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>'
+  wrap.style.cssText='margin-bottom:10px;border:1px solid #e0dbd3;border-radius:12px;padding:12px 14px;background:#faf8f5';
+  wrap.innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+    +'<div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.04em">Room '+(idx+1)+'</div>'
+    +'<button type="button" onclick="removeRoomRow(this)" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:20px;line-height:1;min-width:44px;min-height:36px;display:flex;align-items:center;justify-content:center">×</button>'
     +'</div>'
-    +'<div style="font-size:11px;color:#aaa;margin-bottom:8px" id="fRoomHint'+idx+'">'+(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+'</div>'
-    +'<input id="fCouple'+idx+'" value="'+coupleName+'" placeholder="Couple / guest name (e.g. Tom &amp; Alice)" style="width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;color:#1a1a18;-webkit-appearance:none"/>';
+    +'<div class="fl" style="margin-bottom:10px"><label style="font-size:11px">Bedroom</label>'
+    +roomSelectHTML(roomId,idx)
+    +'<div style="font-size:11px;color:#aaa;margin-top:4px" id="fRoomHint'+idx+'">'+(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+'</div>'
+    +'</div>'
+    +'<div class="two">'
+    +'<div class="fl"><label style="font-size:11px">Number of people</label>'
+    +'<input type="number" id="fPeople'+idx+'" value="'+ppl+'" min="1" max="20" oninput="updateTotalPeople()" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;text-align:center;-webkit-appearance:none;width:100%"/></div>'
+    +'<div class="fl"><label style="font-size:11px">Who\'s staying here?</label>'
+    +'<input id="fCouple'+idx+'" value="'+coupleName+'" placeholder="e.g. Tom &amp; Alice" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff;color:#1a1a18;-webkit-appearance:none;width:100%"/></div>'
+    +'</div>'
+    +'<div style="font-size:11px;color:#aaa;margin-top:6px;line-height:1.4">You can list any names here — one person, a couple, or the whole group in this room</div>';
   document.getElementById('roomRows').appendChild(wrap);
+  updateTotalPeople();
+  updateRoomCount();
 }
-function removeRoomRow(btn){var w=btn.closest('.room-row-wrap');if(document.querySelectorAll('.room-row-wrap').length>1)w.remove()}
+
+function updateTotalPeople(){
+  var total=0;
+  document.querySelectorAll('.room-row-wrap').forEach(function(wrap,i){
+    var ppl=document.getElementById('fPeople'+i);
+    if(ppl)total+=parseInt(ppl.value)||0;
+  });
+  var el=document.getElementById('fTotalPeople');
+  if(el)el.value=total>0?total:'';
+}
+
+function updateRoomCount(){
+  var n=document.querySelectorAll('.room-row-wrap').length;
+  var el=document.getElementById('roomCount');
+  if(el)el.textContent=n+' room'+(n!==1?'s':'');
+}
+function removeRoomRow(btn){
+  var w=btn.closest('.room-row-wrap');
+  if(document.querySelectorAll('.room-row-wrap').length>1){w.remove();updateTotalPeople();updateRoomCount();}
+}
 function updateRoomRowHint(idx){
   var sel=document.getElementById('fRoomSel'+idx);
   var hint=document.getElementById('fRoomHint'+idx);
   if(sel&&hint){var r=ROOMS[sel.value];hint.textContent=r?r.bedDesc+' · sleeps up to '+r.maxPeople:''}
+  updateTotalPeople();
 }
 function getRoomRows(){
   var rows=[];
@@ -448,6 +502,7 @@ function openNewModal(){
   document.getElementById('fEnd').value='';
   ['warnErr','warnConflict','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   document.getElementById('roomRows').innerHTML='';
+  document.getElementById('fTotalPeople').value='';
   addRoomRow('og1',2);
   document.getElementById('modalTitle').textContent='Add a visit';
   document.getElementById('modalOverlay').classList.add('open');
@@ -463,6 +518,7 @@ function openEditModal(id){
   document.getElementById('fNotes').value=v.notes||'';
   ['warnErr','warnConflict','warnCap'].forEach(function(id){document.getElementById(id).style.display='none'});
   document.getElementById('roomRows').innerHTML='';
+  document.getElementById('fTotalPeople').value='';
   addRoomRow(v.room||'og1',v.people||2,v.couple_name||'');
   document.getElementById('modalTitle').textContent='Edit visit';
   closeDetail();
