@@ -341,6 +341,36 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
   <div class="detail-card" id="fsDetailCard"></div>
 </div>
 
+<!-- DAY ACTION SHEET -->
+<div class="modal-overlay" id="dayActionOverlay">
+  <div class="modal" style="max-height:60vh">
+    <div class="modal-handle"></div>
+    <div class="modal-body" style="padding-top:20px">
+      <div style="font-size:13px;color:#888;text-align:center;margin-bottom:4px" id="dayActionDate"></div>
+      <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:20px">What would you like to add?</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button onclick="dayActionGuest()" style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:#E6F1FB;border:1px solid #185FA5;border-radius:12px;cursor:pointer;text-align:left;width:100%">
+          <span style="font-size:24px">🏖</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#0C447C">Guest visit</div>
+            <div style="font-size:12px;color:#378ADD;margin-top:2px">Book guests into a bedroom</div>
+          </div>
+        </button>
+        <button onclick="dayActionFamily()" style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:#EAF3DE;border:1px solid #3B6D11;border-radius:12px;cursor:pointer;text-align:left;width:100%">
+          <span style="font-size:24px">🏠</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#27500A">My dates at the house</div>
+            <div style="font-size:12px;color:#3B6D11;margin-top:2px">Mark when you'll be here</div>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:center;border-top:none;padding-top:0">
+      <button onclick="closeDayAction()" style="padding:10px 24px;font-size:14px;background:transparent;border:none;cursor:pointer;color:#aaa;min-height:40px">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- NOTIFY MODAL -->
 <div class="modal-overlay" id="notifyOverlay">
   <div class="modal" style="max-height:80vh">
@@ -388,14 +418,14 @@ var HC={
   Family:{bg:'#F1EFE8',bdr:'#5F5E5A',txt:'#444441'}
 };
 var HOLIDAYS={
-  '2026-05-26':{label:'Memorial Day', short:'Mem. Day',    type:'holiday'},
-  '2026-06-15':{label:"Father's Day", short:"Dad's Day",   type:'holiday'},
-  '2026-06-18':{label:"Ben's birthday", short:'Ben 🎂',    type:'birthday'},
-  '2026-06-29':{label:"Corey's birthday", short:'Corey 🎂',type:'birthday'},
-  '2026-07-04':{label:'4th of July',  short:'4th July',    type:'holiday'},
-  '2026-07-08':{label:"Steve's birthday", short:'Steve 🎂',type:'birthday'},
-  '2026-08-01':{label:"Wendy's birthday", short:'Wendy 🎂',type:'birthday'},
-  '2026-08-02':{label:'🚴 PMC',       short:'🚴 PMC',      type:'holiday'}
+  '2026-05-25':{label:'Memorial Day',       short:'Mem. Day',      type:'holiday'},
+  '2026-06-18':{label:"Ben's birthday",     short:'Ben 🎂',        type:'birthday'},
+  '2026-06-21':{label:"Father's Day",       short:"Father's Day",  type:'holiday'},
+  '2026-06-29':{label:"Corey's birthday",   short:'Corey 🎂',      type:'birthday'},
+  '2026-07-04':{label:'4th of July',        short:'4th of July',   type:'holiday'},
+  '2026-07-08':{label:"Steve's birthday",   short:'Steve 🎂',      type:'birthday'},
+  '2026-08-01':{label:"Wendy's birthday",   short:'Wendy 🎂',      type:'birthday'},
+  '2026-08-02':{label:'🚴 PMC',             short:'🚴 PMC',        type:'holiday'}
 };
 var MONTHS=[{name:'May',y:2026,m:4},{name:'June',y:2026,m:5},{name:'July',y:2026,m:6},{name:'August',y:2026,m:7}];
 var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -968,9 +998,19 @@ function renderFamilyCalendar(){
   document.getElementById('familyCalContainer').innerHTML=html;
 }
 
-function dayClick(e,date){if(e.target.closest('.event-pill'))return;prefillDate=date;openNewModal()}
+function openDayAction(date){
+  prefillDate=date;
+  var d=parseD(date);
+  var label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('dayActionDate').textContent=label;
+  document.getElementById('dayActionOverlay').classList.add('open');
+}
+function closeDayAction(){document.getElementById('dayActionOverlay').classList.remove('open')}
+function dayActionGuest(){closeDayAction();openNewModal()}
+function dayActionFamily(){closeDayAction();openFamilyModal()}
+function dayClick(e,date){if(e.target.closest('.event-pill'))return;openDayAction(date)}
 function pillClick(e,id){e.stopPropagation();openDetail(+id)}
-function fsDayClick(e,date){if(e.target.closest('.family-pill'))return;prefillDate=date;openFamilyModal()}
+function fsDayClick(e,date){if(e.target.closest('.family-pill'))return;openDayAction(date)}
 function fsPillClick(e,id){e.stopPropagation();openFsDetail(+id)}
 
 function renderAll(){
@@ -979,7 +1019,7 @@ function renderAll(){
 }
 
 // ── CLICK OUTSIDE ─────────────────────────
-['modalOverlay','detailOverlay','familyModalOverlay','fsDetailOverlay','notifyOverlay'].forEach(function(id){
+['modalOverlay','detailOverlay','familyModalOverlay','fsDetailOverlay','notifyOverlay','dayActionOverlay'].forEach(function(id){
   var el=document.getElementById(id);
   if(el)el.addEventListener('click',function(e){
     if(e.target===this){
@@ -988,6 +1028,7 @@ function renderAll(){
       else if(id==='familyModalOverlay')closeFamilyModal();
       else if(id==='fsDetailOverlay')closeFsDetail();
       else if(id==='notifyOverlay')closeNotify();
+      else if(id==='dayActionOverlay')closeDayAction();
     }
   });
 });
