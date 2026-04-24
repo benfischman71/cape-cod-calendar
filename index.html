@@ -802,8 +802,8 @@ function openDetail(id){
   if(r)h+='<div class="dc-row"><div class="dc-label">Area</div><div class="dc-val">'+r.section+'</div></div>';
   if(v.couple_name)h+='<div class="dc-row"><div class="dc-label">Room guests</div><div class="dc-val" style="font-weight:600">'+v.couple_name+'</div></div>';
   if(v.notes)h+='<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+v.notes+'</div></div>';
-  h+='</div><div class="detail-footer"><button class="btn-del" data-did="'+id+'" onclick="deleteVisit(this.dataset.did)">Delete</button>';
-  h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-eid="'+id+'" onclick="openEditModal(this.dataset.eid)">Edit</button>';
+  h+='</div><div class="detail-footer"><button class="btn-del" data-did="'+id+'" onclick="deleteVisit(+this.dataset.did)">Delete</button>';
+  h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-eid="'+id+'" onclick="openEditModal(+this.dataset.eid)">Edit</button>';
   h+='<button class="btn-back" onclick="closeDetail()">Close</button></div></div>';
   document.getElementById('detailCard').innerHTML=h;
   document.getElementById('detailOverlay').classList.add('open');
@@ -828,8 +828,8 @@ function openFsDetail(id){
   h+='<div class="stat-box"><div class="dc-label">Leaving</div><div style="font-size:12px;font-weight:600">'+fmtDate(f.end_date)+'</div></div>';
   h+='<div class="stat-box"><div class="dc-label">Nights</div><div style="font-size:12px;font-weight:600">'+n+'</div></div></div>';
   if(f.notes)h+='<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+f.notes+'</div></div>';
-  h+='</div><div class="detail-footer"><button class="btn-del" data-fsid="'+id+'" onclick="deleteFamilyStay(this.dataset.fsid)">Delete</button>';
-  h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-feid="'+id+'" onclick="openFamilyModal(this.dataset.feid)">Edit</button>';
+  h+='</div><div class="detail-footer"><button class="btn-del" data-fsid="'+id+'" onclick="deleteFamilyStay(+this.dataset.fsid)">Delete</button>';
+  h+='<div style="display:flex;gap:8px"><button class="btn-edit" data-feid="'+id+'" onclick="openFamilyModal(+this.dataset.feid)">Edit</button>';
   h+='<button class="btn-back" onclick="closeFsDetail()">Close</button></div></div>';
   document.getElementById('fsDetailCard').innerHTML=h;
   document.getElementById('fsDetailOverlay').classList.add('open');
@@ -969,9 +969,9 @@ function renderFamilyCalendar(){
 }
 
 function dayClick(e,date){if(e.target.closest('.event-pill'))return;prefillDate=date;openNewModal()}
-function pillClick(e,id){e.stopPropagation();openDetail(id)}
+function pillClick(e,id){e.stopPropagation();openDetail(+id)}
 function fsDayClick(e,date){if(e.target.closest('.family-pill'))return;prefillDate=date;openFamilyModal()}
-function fsPillClick(e,id){e.stopPropagation();openFsDetail(id)}
+function fsPillClick(e,id){e.stopPropagation();openFsDetail(+id)}
 
 function renderAll(){
   renderFilters();renderLegend();renderCalendar();
