@@ -461,11 +461,11 @@ async function saveVisit(){
   showLoading();
   if(editingId){
     var rr = roomRows[0];
-    var res = await sb.from('visits').update({guest_name:guest,host:host,room:rr.room,people:rr.people,start_date:start,end_date:end,notes:notes}).eq('id',editingId);
+    var res = await sb.from('visits').update({guest_name:guest,host:host,room:rr.room,people:rr.people,couple_name:rr.couple_name||null,start_date:start,end_date:end,notes:notes}).eq('id',editingId);
     if(res.error){ hideLoading(); showToast('Error saving — try again'); return; }
   } else {
     var payloads = roomRows.map(function(rr){
-      return {guest_name:guest, host:host, room:rr.room, people:rr.people, start_date:start, end_date:end, notes:notes};
+      return {guest_name:guest, host:host, room:rr.room, people:rr.people, couple_name:rr.couple_name||null, start_date:start, end_date:end, notes:notes};
     });
     var res = await sb.from('visits').insert(payloads);
     if(res.error){ hideLoading(); showToast('Error saving — try again'); return; }
@@ -509,23 +509,28 @@ function roomSelectHTML(selectedId, idx){
   return h;
 }
 
-function addRoomRow(roomId, ppl){
+function addRoomRow(roomId, ppl, coupleName){
   roomId = roomId || 'og1';
   ppl = ppl || 2;
+  coupleName = coupleName || '';
   var idx = document.querySelectorAll('.room-row').length;
   var r = ROOMS[roomId];
-  var row = document.createElement('div');
-  row.className = 'room-row';
-  row.innerHTML = roomSelectHTML(roomId, idx)
-    + '<input type="number" id="fPeople'+idx+'" value="'+ppl+'" min="1" max="12" title="People in this room"/>'
-    + '<span class="room-row-hint" id="fRoomHint'+idx+'">'+(r?r.bedDesc:'')+'</span>'
-    + '<button type="button" class="room-row-del" onclick="removeRoomRow(this)" title="Remove">×</button>';
-  document.getElementById('roomRows').appendChild(row);
+  var wrap = document.createElement('div');
+  wrap.className = 'room-row-wrap';
+  wrap.style.cssText = 'margin-bottom:8px;border:0.5px solid #e0dbd3;border-radius:8px;padding:8px 10px;background:#faf8f5';
+  wrap.innerHTML = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+    + roomSelectHTML(roomId, idx)
+    + '<input type="number" id="fPeople'+idx+'" value="'+ppl+'" min="1" max="12" title="People" style="width:58px;padding:7px 8px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;text-align:center"/>'
+    + '<span style="font-size:10px;color:#aaa;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="fRoomHint'+idx+'">'+(r?r.bedDesc:'')+'</span>'
+    + '<button type="button" onclick="removeRoomRow(this)" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;flex-shrink:0" title="Remove">×</button>'
+    + '</div>'
+    + '<input id="fCouple'+idx+'" value="'+coupleName+'" placeholder="Couple or guest name (optional, e.g. Tom &amp; Alice)" style="width:100%;padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:12px;background:#fff;color:#1a1a18"/>';
+  document.getElementById('roomRows').appendChild(wrap);
 }
 
 function removeRoomRow(btn){
-  var row = btn.closest('.room-row');
-  if(document.querySelectorAll('.room-row').length > 1) row.remove();
+  var wrap = btn.closest('.room-row-wrap');
+  if(document.querySelectorAll('.room-row-wrap').length > 1) wrap.remove();
 }
 
 function updateRoomRowHint(idx){
@@ -536,10 +541,15 @@ function updateRoomRowHint(idx){
 
 function getRoomRows(){
   var rows = [];
-  document.querySelectorAll('.room-row').forEach(function(row, i){
-    var sel = row.querySelector('select');
-    var ppl = row.querySelector('input[type=number]');
-    if(sel && ppl) rows.push({room: sel.value, people: parseInt(ppl.value)||1});
+  document.querySelectorAll('.room-row-wrap').forEach(function(wrap, i){
+    var sel = wrap.querySelector('select');
+    var ppl = wrap.querySelector('input[type=number]');
+    var couple = wrap.querySelector('input[type=text], input:not([type])');
+    if(sel && ppl) rows.push({
+      room: sel.value,
+      people: parseInt(ppl.value)||1,
+      couple_name: couple ? couple.value.trim() : ''
+    });
   });
   return rows;
 }
@@ -583,7 +593,7 @@ function openEditModal(id){
   document.getElementById('warnConflict').style.display='none';
   document.getElementById('warnCap').style.display='none';
   document.getElementById('roomRows').innerHTML='';
-  addRoomRow(v.room||'og1', v.people||2);
+  addRoomRow(v.room||'og1', v.people||2, v.couple_name||'');
   document.getElementById('modalTitle').textContent='Edit visit';
   closeDetail();
   document.getElementById('modalOverlay').classList.add('open');
@@ -621,6 +631,7 @@ function openDetail(id){
   html += '</div>';
   html += '<div class="dc-row"><div class="dc-label">Departure</div><div class="dc-val">'+fmtDate(v.end_date)+'</div></div>';
   if(r) html += '<div class="dc-row"><div class="dc-label">Area</div><div class="dc-val">'+r.section+'</div></div>';
+  if(v.couple_name) html += '<div class="dc-row"><div class="dc-label">Room guests</div><div class="dc-val" style="font-weight:500">'+v.couple_name+'</div></div>';
   if(v.notes) html += '<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+(v.notes||'')+'</div></div>';
   html += '</div>';
   html += '<div class="detail-footer">';
@@ -738,7 +749,8 @@ function renderCalendar(){
         var c = HOST_COLORS[v.host]||HOST_COLORS.Family;
         var isStart = dateS===v.start_date;
         html += '<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)" title="'+(v.guest_name||'')+' · '+(v.people||'?')+' people · '+(ROOMS[v.room]?ROOMS[v.room].label:v.room)+'">';
-        html += '<span class="pill-name">'+(isStart?(v.guest_name||''):'&nbsp;')+'</span>';
+        var pillLabel = isStart ? (v.couple_name || v.guest_name || '') : '&nbsp;';
+        html += '<span class="pill-name">'+pillLabel+'</span>';
         if(isStart) html += '<span class="pill-pax">'+(v.people||'')+'p</span>';
         html += '</div>';
       });
