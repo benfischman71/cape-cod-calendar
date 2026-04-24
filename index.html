@@ -999,10 +999,7 @@ function renderFamilyCalendar(){
         var c=HC[f.member]||HC.Family;
         var avail=f.room_available!==false;
         var isStart=dateS===(f.start_date||"").substring(0,10);
-        html+="<div class="family-pill" style=""+(avail?"":"background:#993C1D;color:#fff;")+"" data-fsid=""+f.id+"" onclick="fsPillClick(event,this.dataset.fsid)">";
-        html+=(avail?"":"🔒 ")+f.member;
-        html+='</div>';
-      });
+        html+='<div class="family-pill" style="'+(avail?'':'background:#993C1D;color:#fff;')+'" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">'+f.member+'</div>';
       if(dayFs.length>7)html+='<div class="more-tag">+'+(dayFs.length-7)+'</div>';
       html+='</div>';
     }
