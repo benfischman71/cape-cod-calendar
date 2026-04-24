@@ -288,6 +288,7 @@ var HOLIDAYS = {
   '2025-07-04': {label:'4th of July',      icon:'flag', type:'holiday'},
   '2025-07-08': {label:"Steve's birthday", icon:'bday', type:'birthday'},
   '2025-08-01': {label:"Wendy's birthday", icon:'bday', type:'birthday'},
+  '2025-08-02': {label:'PMC',              icon:'bike', type:'holiday'},
 };
 
 var MONTHS = [
@@ -690,7 +691,7 @@ function renderCalendar(){
         var hbdr = hol.type==='birthday' ? '#993556' : '#185FA5';
         var htxt = hol.type==='birthday' ? '#72243E' : '#0C447C';
         if(hol.type==='holiday'){ hbg='#FAEEDA'; hbdr='#854F0B'; htxt='#633806'; }
-        html += '<div style="font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px">'+hol.label+'</div>';
+        html += '<div style="font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px">'+(hol.icon==='bike'?'🚴 ':'')+hol.label+'</div>';
       }
 
       dayVisits.slice(0,3).forEach(function(v){
