@@ -551,18 +551,14 @@ async function loadFamilyStays(){
 }
 function subscribeRealtime(){
   realtimeSub=sb.channel('visits-ch').on('postgres_changes',{event:'*',schema:'public',table:'visits'},function(p){
-    if(p.eventType==='INSERT'){visits.push(p.new);showToast((p.new.guest_name||'A visit')+' added')}
-    else if(p.eventType==='UPDATE'){var i=visits.findIndex(function(v){return v.id===p.new.id});if(i>=0)visits[i]=p.new;showToast('Visit updated')}
-    else if(p.eventType==='DELETE'){visits=visits.filter(function(v){return v.id!==p.old.id});showToast('Visit removed')}
-    renderAll();
+    var msg=p.eventType==='INSERT'?(p.new.guest_name||'A visit')+' added':p.eventType==='DELETE'?'Visit removed':'Visit updated';
+    loadVisits().then(function(){renderAll();showToast(msg)});
   }).subscribe();
 }
 function subscribeFsRealtime(){
   realtimeFsSub=sb.channel('fs-ch').on('postgres_changes',{event:'*',schema:'public',table:'family_stays'},function(p){
-    if(p.eventType==='INSERT'){familyStays.push(p.new);showToast(p.new.member+' added their dates')}
-    else if(p.eventType==='UPDATE'){var i=familyStays.findIndex(function(f){return f.id===p.new.id});if(i>=0)familyStays[i]=p.new;showToast('Family stay updated')}
-    else if(p.eventType==='DELETE'){familyStays=familyStays.filter(function(f){return f.id!==p.old.id});showToast('Family stay removed')}
-    renderAll();
+    var msg=p.eventType==='INSERT'?(p.new.member||'Family')+' added their dates':p.eventType==='DELETE'?'Family stay removed':'Family stay updated';
+    loadFamilyStays().then(function(){renderAll();showToast(msg)});
   }).subscribe();
 }
 
