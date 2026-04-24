@@ -202,10 +202,10 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
   </div>
   <div class="main">
     <div class="view-tabs">
-      <button class="view-tab active" id="tabGuests" onclick="switchView('guests')">🏖 Guest visits</button>
-      <button class="view-tab" id="tabFamily" onclick="switchView('family')">🏠 Family schedule</button>
+      <button class="view-tab active" id="tabFamily" onclick="switchView('family')">🏠 Family schedule</button>
+      <button class="view-tab" id="tabGuests" onclick="switchView('guests')">🏖 Guest visits</button>
     </div>
-    <div id="guestView">
+    <div id="guestView" style="display:none">
       <div class="toolbar">
         <div class="filter-scroll"><div class="filter-row" id="hostFilters"></div></div>
         <button class="add-visit-btn" onclick="openNewModal()">+ Add visit</button>
@@ -213,7 +213,7 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
       <div class="legend" id="legend"></div>
       <div id="calendarContainer"></div>
     </div>
-    <div id="familyView" style="display:none">
+    <div id="familyView">
       <div class="toolbar">
         <div class="filter-scroll"><div class="filter-row" id="familyFilters"></div></div>
         <button class="add-family-btn" onclick="openFamilyModal()">+ Add my dates</button>
@@ -407,7 +407,7 @@ var editingId=null,editingFsId=null;
 var prefillDate='',activeFilter='All',activeFamilyFilter='All';
 var detailId=null,fsDetailId=null;
 var realtimeSub=null,realtimeFsSub=null;
-var currentView='guests';
+var currentView='family';
 var lastSavedVisitData=null;
 
 // ── HELPERS ──────────────────────────────
@@ -975,7 +975,7 @@ function fsPillClick(e,id){e.stopPropagation();openFsDetail(id)}
 
 function renderAll(){
   renderFilters();renderLegend();renderCalendar();
-  if(currentView==='family')renderFamilyCalendar();
+  renderFamilyCalendar();
 }
 
 // ── CLICK OUTSIDE ─────────────────────────
