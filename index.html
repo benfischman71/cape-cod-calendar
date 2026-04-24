@@ -244,6 +244,15 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
         <input id="fGuest" placeholder="e.g. Florida Friends, The Hendersons, Mike &amp; Sarah" autocomplete="off"/>
         <div style="font-size:11px;color:#aaa;margin-top:3px">Can be a group name, couple, or individual</div>
       </div>
+
+      <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;background:#faf8f5;margin-top:-4px">
+        <input type="checkbox" id="fIsGroup" style="width:18px;height:18px;accent-color:#185FA5;flex-shrink:0;cursor:pointer"/>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:#1a1a18">Group event</div>
+          <div style="font-size:12px;color:#888;margin-top:1px">Show as one entry on calendar with total headcount</div>
+        </div>
+      </label>
+      </div>
       <div class="two">
         <div class="fl">
           <label>Hosted by</label>
@@ -689,6 +698,7 @@ function getRoomRows(){
 
 async function saveVisit(){
   var guest=document.getElementById('fGuest').value.trim();
+  var isGroup=document.getElementById('fIsGroup').checked;
   var host=document.getElementById('fHost').value;
   var start=document.getElementById('fStart').value;
   var end=document.getElementById('fEnd').value;
@@ -708,8 +718,8 @@ async function saveVisit(){
   showLoading();
   var wasEditing=editingId;
   var res;
-  if(editingId){var r=rr[0];res=await sb.from('visits').update({guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}).eq('id',editingId)}
-  else{res=await sb.from('visits').insert(rr.map(function(r){return{guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}}))}
+  if(editingId){var r=rr[0];res=await sb.from('visits').update({guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes,is_group:isGroup}).eq('id',editingId)}
+  else{res=await sb.from('visits').insert(rr.map(function(r){return{guest_name:guest,host:host,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes,is_group:isGroup}}))}
   hideLoading();
   if(res.error){showToast('Error saving — try again');return}
   closeModal();await loadVisits();renderAll();
@@ -725,6 +735,7 @@ function openNewModal(){
   editingId=null;
   ['fGuest','fNotes'].forEach(function(id){document.getElementById(id).value=''});
   document.getElementById('fHost').value='Steve & Nancy';
+  document.getElementById('fIsGroup').checked=false;
   var arrival=prefillDate||'2026-05-24';
   document.getElementById('fStart').value=arrival;
   document.getElementById('fEnd').value='';
@@ -743,6 +754,7 @@ function openEditModal(id){
   editingId=id;
   document.getElementById('fGuest').value=v.guest_name||'';
   document.getElementById('fHost').value=v.host||'Steve & Nancy';
+  document.getElementById('fIsGroup').checked=v.is_group===true;
   document.getElementById('fStart').value=v.start_date||'';
   document.getElementById('fEnd').value=v.end_date||'';
   onArrivalChange();
@@ -960,14 +972,37 @@ function renderCalendar(){
       html+=holHtml;
       if(!hol)html+='<div style="font-size:7px;font-weight:700;color:'+baColor+';flex-shrink:0;line-height:1">BA:'+ba+'</div>';
       html+='</div>';
-      dv.slice(0,6).forEach(function(v){
-        var c=HC[v.host]||HC.Family;var isStart=dateS===(v.start_date||"").substring(0,10);var lbl=v.couple_name||v.guest_name||"";
-        html+='<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)">';
-        html+='<span class="pill-name">'+(lbl||'&nbsp;')+'</span>';
-        if(isStart)html+='<span class="pill-pax">'+(v.people||'')+'p</span>';
+      var grouped={},singles=[];
+      dv.forEach(function(v){
+        if(v.is_group){var key=v.guest_name||'';if(!grouped[key])grouped[key]={visits:[],totalPeople:0,host:v.host,startDate:v.start_date,id:v.id};grouped[key].visits.push(v);grouped[key].totalPeople+=(v.people||0);}
+        else{singles.push(v);}
+      });
+      var groupPills=[],singlePills=[];
+      Object.keys(grouped).forEach(function(key){var g=grouped[key];var c=HC[g.host]||HC.Family;var isStart=dateS===(g.startDate||'').substring(0,10);var lbl=isStart?key+' ('+g.totalPeople+')':key;groupPills.push({c:c,lbl:lbl,id:g.id,pax:null,isGroup:true});});
+      singles.forEach(function(v){var c=HC[v.host]||HC.Family;var isStart=dateS===(v.start_date||'').substring(0,10);var lbl=v.couple_name||v.guest_name||'';singlePills.push({c:c,lbl:lbl,id:v.id,pax:isStart?v.people:null,isGroup:false});});
+      var famPills=visitsOn(dateS).length>0?[]:[];
+      var fam=familyOn(dateS);
+      var allPills=groupPills.concat(singlePills);
+      var totalPills=allPills.length+fam.length;
+      html+='<div style="display:flex;flex-wrap:wrap;gap:2px;align-content:flex-start">';
+      groupPills.forEach(function(p){
+        html+='<div class="event-pill" style="background:'+p.c.bg+';color:'+p.c.txt+';border-left-color:'+p.c.bdr+';font-weight:700;width:100%" data-vid="'+p.id+'" onclick="pillClick(event,this.dataset.vid)">';
+        html+='<span class="pill-name">'+p.lbl+'</span>';
         html+='</div>';
       });
-      if(dv.length>6)html+='<div class="more-tag">+'+(dv.length-6)+'</div>';
+      var inlineRow='';
+      singlePills.forEach(function(p){
+        inlineRow+='<div class="event-pill" style="background:'+p.c.bg+';color:'+p.c.txt+';border-left-color:'+p.c.bdr+'" data-vid="'+p.id+'" onclick="pillClick(event,this.dataset.vid)">';
+        inlineRow+='<span class="pill-name">'+p.lbl+'</span>';
+        if(p.pax)inlineRow+='<span class="pill-pax">'+p.pax+'p</span>';
+        inlineRow+='</div>';
+      });
+      fam.slice(0,5).forEach(function(f){
+        inlineRow+='<div class="family-pill" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">'+f.member+'</div>';
+      });
+      html+=inlineRow;
+      if(totalPills>8)html+='<div class="more-tag">+'+(totalPills-8)+'</div>';
+      html+='</div>';
       html+='</div>';
     }
     var rem=(7-(first+days)%7)%7;for(var j=0;j<rem;j++)html+='<div class="day-cell empty"></div>';
@@ -1005,11 +1040,12 @@ function renderFamilyCalendar(){
       html+=holHtml2;
       if(!hol){var ba2=bedsAvailableOn(dateS);var baColor2=ba2<=4?"#993C1D":ba2<=12?"#854F0B":"#27500A";html+='<div style="font-size:7px;font-weight:700;color:'+baColor2+';flex-shrink:0;line-height:1">BA:'+ba2+'</div>';}
       html+='</div>';
+      html+='<div style="display:flex;flex-wrap:wrap;gap:2px;align-content:flex-start">';
       dayFs.slice(0,7).forEach(function(f){
-        var c=HC[f.member]||HC.Family;
-        var avail=f.room_available!==false;
-        var isStart=dateS===(f.start_date||"").substring(0,10);
         html+='<div class="family-pill" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">'+f.member+'</div>';
+      });
+      if(dayFs.length>7)html+='<div class="more-tag">+'+(dayFs.length-7)+'</div>';
+      html+='</div>';
       });
       if(dayFs.length>7)html+='<div class="more-tag">+'+(dayFs.length-7)+'</div>';
       html+='</div>';
