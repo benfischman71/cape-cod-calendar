@@ -171,19 +171,6 @@ const SUPABASE_URL = 'https://shfdqitsdbvqeexaxjpf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZmRxaXRzZGJ2cWVleGF4anBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTQzOTksImV4cCI6MjA5MjYzMDM5OX0.neiTcunpNsIBll46E3Bt9WIH-4NbHbLDRISQUu0FMxs';
 const FAMILY_EMAIL = 'family@capecod.house';
 const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
-
-// ── FAMILY PHONE NUMBERS ──────────────────
-// Replace each number with the real cell number (digits only, no dashes or spaces)
-const FAMILY_PHONES = {
-  Steve:  '15551110001',
-  Nancy:  '15551110002',
-  Ben:    '15551110003',
-  Wendy:  '15551110004',
-  TK:     '15551110005',
-  Jake:   '15551110006',
-  Molly:  '15551110007',
-  Corey:  '15551110008'
-};
 </script>
 
 <div class="loading-bar" id="loadingBar"></div>
@@ -292,17 +279,29 @@ const FAMILY_PHONES = {
 
 <!-- NOTIFY MODAL -->
 <div class="modal-overlay" id="notifyOverlay">
-  <div class="modal" style="max-height:70vh">
+  <div class="modal" style="max-height:80vh">
     <div class="modal-handle"></div>
     <div class="modal-header">
       <h3>Notify the family</h3>
       <button class="modal-close" onclick="closeNotify()">&#215;</button>
     </div>
-    <div class="modal-body" id="notifyBody"></div>
-    <div class="modal-footer" style="flex-direction:column;gap:8px;align-items:stretch">
-      <a id="notifySmsBtn" href="#" style="display:block;padding:14px;background:#185FA5;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;min-height:48px;line-height:1.4">📱 Open Messages to send</a>
-      <button onclick="copyNotifyMsg()" style="padding:12px;font-size:14px;background:transparent;border:1px solid #ddd;border-radius:10px;cursor:pointer;color:#555;min-height:44px">Copy message</button>
-      <button onclick="closeNotify()" style="padding:12px;font-size:14px;background:transparent;border:none;cursor:pointer;color:#aaa;min-height:40px">Skip — don't notify</button>
+    <div class="modal-body">
+      <div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:13px;color:#444;white-space:pre-wrap;line-height:1.6;word-break:break-word;max-height:220px;overflow-y:auto" id="notifyMsgPreview"></div>
+      <div style="font-size:12px;color:#aaa;line-height:1.5">Message is ready — choose how to send it. Your contacts app will open and you pick who gets it.</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a id="notifySmsBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#185FA5;color:#fff;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;min-height:52px">
+          💬 Send as Text Message
+        </a>
+        <a id="notifyEmailBtn" href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#fff;color:#1a1a18;border:1px solid #ddd;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;min-height:52px">
+          ✉️ Send as Email
+        </a>
+        <button onclick="copyNotifyMsg()" style="padding:12px;font-size:14px;background:transparent;border:1px solid #e0dbd3;border-radius:10px;cursor:pointer;color:#666;min-height:44px">
+          Copy message text
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:center">
+      <button onclick="closeNotify()" style="padding:10px 24px;font-size:14px;background:transparent;border:none;cursor:pointer;color:#aaa;min-height:40px">Skip</button>
     </div>
   </div>
 </div>
@@ -394,12 +393,10 @@ function buildNotifyMsg(data){
 function openNotify(data){
   lastSavedVisitData = data;
   var msg = buildNotifyMsg(data);
-  var phones = Object.values(FAMILY_PHONES).join(',');
-  var smsHref = 'sms:'+phones+'&body='+encodeURIComponent(msg);
-  document.getElementById('notifySmsBtn').href = smsHref;
-  document.getElementById('notifyBody').innerHTML =
-    '<div style="background:#f5f0e8;border-radius:10px;padding:12px 14px;font-size:13px;color:#444;white-space:pre-wrap;line-height:1.6;word-break:break-word" id="notifyMsgPreview">'+escHtml(msg)+'</div>'
-    +'<div style="font-size:12px;color:#aaa;margin-top:6px">Tap the button below to open Messages with all family members pre-filled. On desktop, use Copy message instead.</div>';
+  var subject = 'Cape Cod: '+data.guest_name+' added ('+data.startFmt+')';
+  document.getElementById('notifySmsBtn').href = 'sms:?&body='+encodeURIComponent(msg);
+  document.getElementById('notifyEmailBtn').href = 'mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg);
+  document.getElementById('notifyMsgPreview').textContent = msg;
   document.getElementById('notifyOverlay').classList.add('open');
 }
 
