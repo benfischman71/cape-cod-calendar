@@ -171,8 +171,8 @@ const CALENDAR_URL = 'https://benfischman71.github.io/cape-cod-calendar/';
     <h1>Fischman Cape House</h1>
     <p>Summer 2026 &nbsp;·&nbsp; Family Calendar</p>
     <input type="password" id="authPassword" placeholder="Family password" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#888;cursor:pointer;margin-bottom:14px;justify-content:center">
-      <input type="checkbox" id="rememberMe" checked style="width:16px;height:16px;cursor:pointer;accent-color:#185FA5"/>
+    <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:#888;cursor:pointer;margin-bottom:16px;justify-content:center;padding:10px;border:1px solid #eee;border-radius:10px;background:#faf8f5;-webkit-user-select:none;user-select:none">
+      <input type="checkbox" id="rememberMe" checked style="width:20px;height:20px;cursor:pointer;accent-color:#185FA5;flex-shrink:0"/>
       Stay signed in for 60 days
     </label>
     <button class="auth-btn" onclick="doLogin()">Enter</button>
