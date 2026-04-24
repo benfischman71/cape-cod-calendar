@@ -417,8 +417,8 @@ function todayStr(){var t=new Date();return ds(t.getFullYear(),t.getMonth(),t.ge
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
 function fmtDate(s){return parseD(s).toLocaleDateString('en-US',{month:'short',day:'numeric'})}
 function nightCount(s,e){return Math.round((parseD(e)-parseD(s))/864e5)}
-function visitsOn(d){return visits.filter(function(v){return d>=v.start_date&&d<v.end_date})}
-function familyOn(d){return familyStays.filter(function(f){return d>=f.start_date&&d<f.end_date})}
+function visitsOn(d){return visits.filter(function(v){var s=(v.start_date||'').substring(0,10);var e=(v.end_date||'').substring(0,10);return d>=s&&d<e})}
+function familyOn(d){return familyStays.filter(function(f){var s=(f.start_date||'').substring(0,10);var e=(f.end_date||'').substring(0,10);return d>=s&&d<e})}
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
 function showLoading(){document.getElementById('loadingBar').style.width='60%'}
 function hideLoading(){var b=document.getElementById('loadingBar');b.style.width='100%';setTimeout(function(){b.style.width='0'},400)}
@@ -910,7 +910,7 @@ function renderCalendar(){
       html+='</div>';
       if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';html+='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px">'+hol.short+'</div>'}
       dv.slice(0,3).forEach(function(v){
-        var c=HC[v.host]||HC.Family;var isStart=dateS===v.start_date;var lbl=isStart?(v.couple_name||v.guest_name||''):'';
+        var c=HC[v.host]||HC.Family;var isStart=dateS===(v.start_date||"").substring(0,10);var lbl=v.couple_name||v.guest_name||"";
         html+='<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)">';
         html+='<span class="pill-name">'+(lbl||'&nbsp;')+'</span>';
         if(isStart)html+='<span class="pill-pax">'+(v.people||'')+'p</span>';
@@ -954,9 +954,9 @@ function renderFamilyCalendar(){
       dayFs.slice(0,4).forEach(function(f){
         var c=HC[f.member]||HC.Family;
         var avail=f.room_available!==false;
-        var isStart=dateS===f.start_date;
+        var isStart=dateS===(f.start_date||"").substring(0,10);
         html+='<div class="family-pill" style="background:'+(avail?c.bg:'#FAECE7')+';color:'+(avail?c.txt:'#993C1D')+';border-left-color:'+(avail?c.bdr:'#993C1D')+'" data-fsid="'+f.id+'" onclick="fsPillClick(event,this.dataset.fsid)">';
-        html+=isStart?(avail?'':'🔒 ')+f.member:'&nbsp;';
+        html+=(avail?"":"🔒 ")+f.member;
         html+='</div>';
       });
       if(dayFs.length>4)html+='<div class="more-tag">+'+(dayFs.length-4)+'</div>';
