@@ -446,6 +446,14 @@ function nightCount(s,e){return Math.round((parseD(e)-parseD(s))/864e5)}
 function visitsOn(d){return visits.filter(function(v){var s=(v.start_date||'').substring(0,10);var e=(v.end_date||'').substring(0,10);return d>=s&&d<=e})}
 function familyOn(d){return familyStays.filter(function(f){var s=(f.start_date||'').substring(0,10);var e=(f.end_date||'').substring(0,10);return d>=s&&d<=e})}
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
+function bedsAvailableOn(d){
+  var bookedRooms=visitsOn(d).map(function(v){return v.room});
+  var blockedRooms=Object.keys(ROOMS).filter(function(rid){return isBlockedByFamily(rid,d,d+'\x01')});
+  var occupied=bookedRooms.concat(blockedRooms);
+  return Object.keys(ROOMS).reduce(function(a,rid){
+    return a+(occupied.indexOf(rid)<0?ROOMS[rid].maxPeople:0);
+  },0);
+}
 function showLoading(){document.getElementById('loadingBar').style.width='60%'}
 function hideLoading(){var b=document.getElementById('loadingBar');b.style.width='100%';setTimeout(function(){b.style.width='0'},400)}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2800)}
@@ -946,9 +954,11 @@ function renderCalendar(){
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
       var holHtml='';
       if(hol){var hstyle=hol.type==="birthday"?"font-size:8px;font-weight:700;font-style:italic;padding:2px 6px;border-radius:20px;background:#F4C0D1;color:#72243E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em":"font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#FAC775;color:#412402;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em";holHtml='<div style="'+hstyle+'">'+hol.short+'</div>'}
+      var ba=bedsAvailableOn(dateS);
+      var baColor=ba<=4?'#993C1D':ba<=12?'#854F0B':'#27500A';
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       html+=holHtml;
-      if(!hol&&pax>0)html+='<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'">'+pax+'</div>';
+      if(!hol)html+='<div style="font-size:7px;font-weight:700;color:'+baColor+';flex-shrink:0;line-height:1">BA:'+ba+'</div>';
       html+='</div>';
       dv.slice(0,6).forEach(function(v){
         var c=HC[v.host]||HC.Family;var isStart=dateS===(v.start_date||"").substring(0,10);var lbl=v.couple_name||v.guest_name||"";
@@ -993,7 +1003,7 @@ function renderFamilyCalendar(){
       if(hol){var hstyle2=hol.type==="birthday"?"font-size:8px;font-weight:700;font-style:italic;padding:2px 6px;border-radius:20px;background:#F4C0D1;color:#72243E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em":"font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#FAC775;color:#412402;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em";holHtml2='<div style="'+hstyle2+'">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       html+=holHtml2;
-      if(!hol&&homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homePeople+'</div>';
+      if(!hol){var ba2=bedsAvailableOn(dateS);var baColor2=ba2<=4?"#993C1D":ba2<=12?"#854F0B":"#27500A";html+='<div style="font-size:7px;font-weight:700;color:'+baColor2+';flex-shrink:0;line-height:1">BA:'+ba2+'</div>';}
       html+='</div>';
       dayFs.slice(0,7).forEach(function(f){
         var c=HC[f.member]||HC.Family;
