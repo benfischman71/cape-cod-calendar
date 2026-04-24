@@ -447,8 +447,8 @@ function todayStr(){var t=new Date();return ds(t.getFullYear(),t.getMonth(),t.ge
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
 function fmtDate(s){return parseD(s).toLocaleDateString('en-US',{month:'short',day:'numeric'})}
 function nightCount(s,e){return Math.round((parseD(e)-parseD(s))/864e5)}
-function visitsOn(d){return visits.filter(function(v){var s=(v.start_date||'').substring(0,10);var e=(v.end_date||'').substring(0,10);return d>=s&&d<e})}
-function familyOn(d){return familyStays.filter(function(f){var s=(f.start_date||'').substring(0,10);var e=(f.end_date||'').substring(0,10);return d>=s&&d<e})}
+function visitsOn(d){return visits.filter(function(v){var s=(v.start_date||'').substring(0,10);var e=(v.end_date||'').substring(0,10);return d>=s&&d<=e})}
+function familyOn(d){return familyStays.filter(function(f){var s=(f.start_date||'').substring(0,10);var e=(f.end_date||'').substring(0,10);return d>=s&&d<=e})}
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
 function showLoading(){document.getElementById('loadingBar').style.width='60%'}
 function hideLoading(){var b=document.getElementById('loadingBar');b.style.width='100%';setTimeout(function(){b.style.width='0'},400)}
@@ -479,6 +479,18 @@ function isRoomBlocked(roomId,start,end,excludeId){
 function toggleDevMenu(){document.getElementById('devMenu').classList.toggle('open')}
 function hardRefresh(){window.location.reload(true)}
 document.addEventListener('click',function(e){if(!e.target.closest('.dev-wrap')){var m=document.getElementById('devMenu');if(m)m.classList.remove('open')}});
+
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&currentUser){
+    Promise.all([loadVisits(),loadFamilyStays()]).then(function(){renderAll()});
+  }
+});
+
+window.addEventListener('focus',function(){
+  if(currentUser){
+    Promise.all([loadVisits(),loadFamilyStays()]).then(function(){renderAll()});
+  }
+});
 
 // ── VIEW SWITCHING ────────────────────────
 function switchView(v){
