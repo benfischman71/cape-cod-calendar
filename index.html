@@ -673,11 +673,21 @@ async function saveVisit(){
   showLoad();
   var wasNew=!editingVid;
   var res;
+  var payload=function(r){return{guest_name:name,host:host,is_group:isGrp,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}};
   if(editingVid){
     var r=rrs[0];
-    res=await sb.from('visits').update({guest_name:name,host:host,is_group:isGrp,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}).eq('id',editingVid);
+    res=await sb.from('visits').update(payload(r)).eq('id',editingVid);
+    if(res.error&&res.error.message&&res.error.message.indexOf('is_group')>=0){
+      var p2=payload(r);delete p2.is_group;
+      res=await sb.from('visits').update(p2).eq('id',editingVid);
+    }
   } else {
-    res=await sb.from('visits').insert(rrs.map(function(r){return{guest_name:name,host:host,is_group:isGrp,room:r.room,people:r.people,couple_name:r.couple_name||null,start_date:start,end_date:end,notes:notes}}));
+    var rows=rrs.map(payload);
+    res=await sb.from('visits').insert(rows);
+    if(res.error&&res.error.message&&res.error.message.indexOf('is_group')>=0){
+      var rows2=rrs.map(function(r){var p=payload(r);delete p.is_group;return p});
+      res=await sb.from('visits').insert(rows2);
+    }
   }
   hideLoad();
   if(res.error){toast('Error saving — try again');return}
