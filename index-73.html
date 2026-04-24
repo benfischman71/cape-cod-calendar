@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cape Cod House — Summer 2025</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;background:#f5f0e8;color:#1a1a18;min-height:100vh}
+
+/* ── AUTH SCREEN ── */
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f0e8}
+.auth-card{background:#fff;border:1px solid #e0dbd3;border-radius:14px;padding:36px 40px;width:340px;text-align:center}
+.auth-card h1{font-size:20px;font-weight:600;color:#1a1a18;margin-bottom:4px}
+.auth-card p{font-size:13px;color:#888;margin-bottom:24px}
+.auth-card input{width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-bottom:12px;background:#faf8f5;color:#1a1a18}
+.auth-card input:focus{outline:none;border-color:#185FA5}
+.auth-btn{width:100%;padding:10px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.auth-btn:hover{background:#0C447C}
+.auth-err{font-size:12px;color:#993C1D;margin-top:8px;display:none}
+
+/* ── APP SHELL ── */
+.app{display:none;min-height:100vh}
+.header{background:#1a1a18;color:#faf8f5;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.header-left h1{font-size:18px;font-weight:600}
+.header-left p{font-size:12px;color:#888;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:16px}
+.user-pill{font-size:12px;color:#aaa;padding:4px 10px;background:rgba(255,255,255,0.08);border-radius:20px}
+.logout-btn{font-size:12px;color:#888;cursor:pointer;background:none;border:none;padding:4px 8px}
+.logout-btn:hover{color:#fff}
+
+/* ── MAIN ── */
+.main{max-width:1060px;margin:0 auto;padding:24px 28px 48px}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;font-size:12px;border:1px solid #ddd;border-radius:20px;background:#fff;color:#555;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:#185FA5;color:#185FA5}
+.filter-btn.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.add-visit-btn{padding:8px 18px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.add-visit-btn:hover{background:#0C447C}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:18px;align-items:center}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#666}
+.leg-dot{width:10px;height:10px;border-radius:3px;border:1.5px solid transparent}
+.leg-sep{width:1px;height:14px;background:#ddd;margin:0 4px}
+.occ-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#666}
+.occ-sq{width:10px;height:10px;border-radius:2px}
+
+/* ── MONTH ── */
+.month-block{background:#fff;border:1px solid #e0dbd3;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.month-header{padding:12px 16px 10px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #f0ece4;background:#faf8f5}
+.month-name{font-size:16px;font-weight:700;color:#1a1a18}
+.month-meta{font-size:11px;color:#888}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #f0ece4}
+.dow-cell{text-align:center;padding:6px 0;font-size:10px;color:#aaa;font-weight:600;border-right:1px solid #f0ece4}
+.dow-cell:last-child{border-right:none}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.day-cell{min-height:96px;padding:5px 5px 4px;border-right:1px solid #f0ece4;border-bottom:1px solid #f0ece4;background:#fff;cursor:pointer;transition:background .1s;display:flex;flex-direction:column;gap:2px}
+.day-cell:nth-child(7n){border-right:none}
+.day-cell:hover{background:#faf8f5}
+.day-cell.empty{background:#faf8f5;cursor:default}
+.day-cell.empty:hover{background:#faf8f5}
+.day-cell.weekend{background:#fcfaf7}
+.day-cell.weekend:hover{background:#f5f0e8}
+.day-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.day-num{font-size:12px;font-weight:600;color:#1a1a18;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.day-num.is-today{background:#185FA5;color:#fff;border-radius:50%}
+.pax-badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;line-height:1.6}
+.event-pill{font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.5;border-left:2px solid transparent;display:flex;align-items:center;justify-content:space-between;gap:3px}
+.event-pill:hover{opacity:0.82}
+.pill-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.pill-pax{flex-shrink:0;opacity:0.7;font-size:8px}
+.more-tag{font-size:9px;color:#aaa;padding:0 2px}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;border:1px solid #e0dbd3}
+.modal-header{padding:16px 20px 12px;border-bottom:1px solid #f0ece4;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:2}
+.modal-header h3{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1;padding:0 4px}
+.modal-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fl{display:flex;flex-direction:column;gap:4px}
+.fl label{font-size:11px;color:#888;font-weight:600;letter-spacing:0.04em;text-transform:uppercase}
+.fl input,.fl select,.fl textarea{padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#faf8f5;color:#1a1a18;width:100%}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:#185FA5}
+.fl textarea{resize:vertical;min-height:52px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.room-hint{font-size:11px;color:#aaa;margin-top:3px;padding-left:2px}
+.modal-footer{padding:12px 20px 16px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid #f0ece4;position:sticky;bottom:0;background:#fff}
+.btn-cancel{padding:8px 16px;font-size:13px;background:transparent;border:1px solid #ddd;border-radius:8px;cursor:pointer;color:#888}
+.btn-save{padding:8px 16px;font-size:13px;background:#185FA5;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+.btn-save:hover{background:#0C447C}
+.warn-box{font-size:12px;padding:7px 10px;border-radius:7px;display:none}
+.warn-err{background:#FAECE7;color:#993C1D;border:1px solid rgba(153,60,29,0.2)}
+.warn-cap{background:#FAEEDA;color:#854F0B;border:1px solid rgba(133,79,11,0.2)}
+
+/* ── DETAIL PANEL ── */
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.detail-overlay.open{display:flex}
+.detail-card{background:#fff;border-radius:14px;width:420px;max-width:95vw;overflow:hidden;border:1px solid #e0dbd3}
+.color-bar{height:5px}
+.detail-body{padding:18px 20px}
+.dc-label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px}
+.dc-val{font-size:13px;color:#1a1a18;font-weight:500}
+.dc-row{margin-bottom:12px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat-box{background:#faf8f5;border-radius:8px;padding:8px 10px;border:1px solid #f0ece4}
+.big-num{font-size:28px;font-weight:700;line-height:1;color:#1a1a18}
+.detail-footer{padding:10px 20px 16px;border-top:1px solid #f0ece4;display:flex;align-items:center;justify-content:space-between}
+.btn-del{padding:7px 12px;font-size:12px;background:#FAECE7;color:#993C1D;border:1px solid rgba(153,60,29,0.25);border-radius:8px;cursor:pointer}
+.btn-edit{padding:7px 12px;font-size:12px;background:#E6F1FB;color:#0C447C;border:1px solid rgba(24,95,165,0.25);border-radius:8px;cursor:pointer}
+.btn-back{padding:7px 12px;font-size:12px;background:transparent;border:1px solid #ddd;border-radius:8px;cursor:pointer;color:#888}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a18;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:all .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOADING ── */
+.loading-bar{height:3px;background:#185FA5;width:0;transition:width .4s;position:fixed;top:0;left:0;z-index:999}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     CONFIGURATION — paste your Supabase keys here
+     ═══════════════════════════════════════════ -->
+<script>
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const FAMILY_EMAIL = 'family@capecod.house';
+const APP_VERSION = '2025.1.0';
+</script>
+
+<div class="loading-bar" id="loadingBar"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ── AUTH SCREEN ── -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <h1>Cape Cod House</h1>
+    <p>Summer 2025 &nbsp;·&nbsp; Family Calendar</p>
+    <input type="password" id="authPassword" placeholder="Family password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="auth-btn" onclick="doLogin()">Enter</button>
+    <div class="auth-err" id="authErr">Incorrect password — try again</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div class="app" id="appShell">
+  <div class="header">
+    <div class="header-left">
+      <h1>Cape Cod House &nbsp;·&nbsp; Summer 2025</h1>
+      <p id="headerMeta">Loading...</p>
+    </div>
+    <div class="header-right">
+      <span class="user-pill" id="userPill"></span>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="toolbar">
+      <div class="toolbar-left" id="hostFilters"></div>
+      <button class="add-visit-btn" onclick="openNewModal()">+ Add visit</button>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="calendarContainer"></div>
+  </div>
+</div>
+
+<!-- ── ADD / EDIT MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add a visit</h3>
+      <button class="modal-close" onclick="closeModal()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="fl"><label>Guest name(s)</label><input id="fGuest" placeholder="e.g. The Hendersons"/></div>
+      <div class="two">
+        <div class="fl">
+          <label>Hosted by</label>
+          <select id="fHost">
+            <option>Nancy</option><option>Steve</option><option>Ben</option><option>Wendy</option><option>Molly</option>
+          </select>
+        </div>
+        <div class="fl"><label>Number of guests</label><input type="number" id="fPeople" value="2" min="1" max="12"/></div>
+      </div>
+      <div class="fl">
+        <label>Room</label>
+        <select id="fRoom" onchange="updateRoomHint()">
+          <optgroup label="Main house">
+            <option value="ns">Nancy &amp; Steve bedroom</option>
+            <option value="bw">Ben &amp; Wendy bedroom</option>
+            <option value="mol">Molly bedroom</option>
+            <option value="bunk">Bunk room</option>
+          </optgroup>
+          <optgroup label="Over garage">
+            <option value="og1">Over garage 1</option>
+            <option value="og2">Over garage 2</option>
+          </optgroup>
+          <optgroup label="Guest house">
+            <option value="ghu">Guest house upstairs</option>
+            <option value="ghr">Guest house rear</option>
+            <option value="ghf">Guest house front</option>
+          </optgroup>
+        </select>
+        <div class="room-hint" id="roomHint"></div>
+      </div>
+      <div class="two">
+        <div class="fl"><label>Arrival</label><input type="date" id="fStart"/></div>
+        <div class="fl"><label>Departure</label><input type="date" id="fEnd"/></div>
+      </div>
+      <div class="fl"><label>Notes</label><textarea id="fNotes" placeholder="Anything to remember..."></textarea></div>
+      <div class="warn-box warn-err" id="warnErr">Please fill in guest name, arrival, and departure.</div>
+      <div class="warn-box warn-err" id="warnConflict">That room is already booked for some of those dates.</div>
+      <div class="warn-box warn-cap" id="warnCap">Guest count exceeds this room's usual capacity — saved anyway.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveVisit()">Save visit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DETAIL OVERLAY ── -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-card" id="detailCard"></div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// ROOM DATA
+// ─────────────────────────────────────────
+var ROOMS = {
+  ns:   {label:'Nancy & Steve',        section:'Main house',  maxPeople:2,  bedDesc:'1 king'},
+  bw:   {label:'Ben & Wendy',          section:'Main house',  maxPeople:2,  bedDesc:'1 king'},
+  mol:  {label:'Molly',                section:'Main house',  maxPeople:2,  bedDesc:'1 king'},
+  bunk: {label:'Bunk room',            section:'Main house',  maxPeople:6,  bedDesc:'1 king + 2 full bunks'},
+  og1:  {label:'Over garage 1',        section:'Over garage', maxPeople:2,  bedDesc:'1 king'},
+  og2:  {label:'Over garage 2',        section:'Over garage', maxPeople:2,  bedDesc:'1 king'},
+  ghu:  {label:'Guest house upstairs', section:'Guest house', maxPeople:2,  bedDesc:'1 king'},
+  ghr:  {label:'Guest house rear',     section:'Guest house', maxPeople:4,  bedDesc:'2 queens'},
+  ghf:  {label:'Guest house front',    section:'Guest house', maxPeople:2,  bedDesc:'1 king'}
+};
+
+var HOST_COLORS = {
+  Nancy:  {bg:'#E6F1FB', bdr:'#185FA5', txt:'#0C447C'},
+  Steve:  {bg:'#EAF3DE', bdr:'#3B6D11', txt:'#27500A'},
+  Ben:    {bg:'#FAEEDA', bdr:'#854F0B', txt:'#633806'},
+  Wendy:  {bg:'#FBEAF0', bdr:'#993556', txt:'#72243E'},
+  Molly:  {bg:'#E1F5EE', bdr:'#0F6E56', txt:'#085041'},
+  Family: {bg:'#EEEDFE', bdr:'#534AB7', txt:'#3C3489'}
+};
+
+var MONTHS = [
+  {name:'June',   y:2025, m:5},
+  {name:'July',   y:2025, m:6},
+  {name:'August', y:2025, m:7}
+];
+var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+var sb = null;
+var currentUser = null;
+var visits = [];
+var editingId = null;
+var prefillDate = '';
+var activeFilter = 'All';
+var detailId = null;
+var realtimeSub = null;
+
+// ─────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────
+function ds(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function parseD(s){ var p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+function todayStr(){ var t=new Date(); return ds(t.getFullYear(),t.getMonth(),t.getDate()); }
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function fmtDate(s){ return parseD(s).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function nightCount(s,e){ return Math.round((parseD(e)-parseD(s))/864e5); }
+function visitsOn(d){ return visits.filter(function(v){ return d>=v.start_date && d<v.end_date; }); }
+function peopleOn(d){ return visitsOn(d).reduce(function(a,v){ return a+(v.people||0); },0); }
+function roomsOn(d){ return visitsOn(d).length; }
+function showLoading(){ var b=document.getElementById('loadingBar'); b.style.width='60%'; }
+function hideLoading(){ var b=document.getElementById('loadingBar'); b.style.width='100%'; setTimeout(function(){ b.style.width='0'; },400); }
+function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); },2800); }
+function paxColor(n){
+  if(n===0) return {bg:'#f5f0e8',txt:'#aaa'};
+  if(n<=4)  return {bg:'#E1F5EE',txt:'#0F6E56'};
+  if(n<=10) return {bg:'#FAEEDA',txt:'#854F0B'};
+  return {bg:'#FAECE7',txt:'#993C1D'};
+}
+function hasConflict(roomId,start,end,excludeId){
+  return visits.some(function(v){
+    return v.id!==excludeId && v.room===roomId && v.start_date<end && v.end_date>start;
+  });
+}
+
+// ─────────────────────────────────────────
+// SUPABASE INIT
+// ─────────────────────────────────────────
+function initSupabase(){
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+// ─────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────
+async function doLogin(){
+  var pw = document.getElementById('authPassword').value;
+  if(!pw){ return; }
+  showLoading();
+  var res = await sb.auth.signInWithPassword({email: FAMILY_EMAIL, password: pw});
+  hideLoading();
+  if(res.error){
+    document.getElementById('authErr').style.display = 'block';
+    document.getElementById('authPassword').value = '';
+  } else {
+    currentUser = res.data.user;
+    onLoggedIn();
+  }
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  currentUser = null;
+  visits = [];
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authErr').style.display = 'none';
+  if(realtimeSub){ sb.removeChannel(realtimeSub); realtimeSub=null; }
+}
+
+async function checkSession(){
+  var res = await sb.auth.getSession();
+  if(res.data && res.data.session && res.data.session.user){
+    currentUser = res.data.session.user;
+    onLoggedIn();
+  }
+}
+
+// ─────────────────────────────────────────
+// AFTER LOGIN
+// ─────────────────────────────────────────
+async function onLoggedIn(){
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  document.getElementById('userPill').textContent = 'Family member';
+  await loadVisits();
+  subscribeRealtime();
+  renderAll();
+}
+
+// ─────────────────────────────────────────
+// DATA — LOAD
+// ─────────────────────────────────────────
+async function loadVisits(){
+  showLoading();
+  var res = await sb.from('visits').select('*').order('start_date',{ascending:true});
+  hideLoading();
+  if(res.error){ showToast('Error loading visits'); return; }
+  visits = res.data || [];
+}
+
+// ─────────────────────────────────────────
+// REALTIME
+// ─────────────────────────────────────────
+function subscribeRealtime(){
+  realtimeSub = sb.channel('visits-changes')
+    .on('postgres_changes',{event:'*',schema:'public',table:'visits'}, function(payload){
+      if(payload.eventType==='INSERT'){
+        visits.push(payload.new);
+        showToast((payload.new.guest_name||'A visit')+' was added');
+      } else if(payload.eventType==='UPDATE'){
+        var idx = visits.findIndex(function(v){ return v.id===payload.new.id; });
+        if(idx>=0) visits[idx]=payload.new;
+        showToast('Visit updated');
+      } else if(payload.eventType==='DELETE'){
+        visits = visits.filter(function(v){ return v.id!==payload.old.id; });
+        showToast('Visit removed');
+      }
+      renderAll();
+    })
+    .subscribe();
+}
+
+// ─────────────────────────────────────────
+// SAVE / DELETE
+// ─────────────────────────────────────────
+async function saveVisit(){
+  var guest = document.getElementById('fGuest').value.trim();
+  var host  = document.getElementById('fHost').value;
+  var room  = document.getElementById('fRoom').value;
+  var ppl   = parseInt(document.getElementById('fPeople').value)||1;
+  var start = document.getElementById('fStart').value;
+  var end   = document.getElementById('fEnd').value;
+  var notes = document.getElementById('fNotes').value.trim();
+
+  document.getElementById('warnErr').style.display='none';
+  document.getElementById('warnConflict').style.display='none';
+  document.getElementById('warnCap').style.display='none';
+
+  if(!guest||!start||!end){ document.getElementById('warnErr').style.display='block'; return; }
+  if(start>=end){ document.getElementById('warnErr').style.display='block'; return; }
+  if(hasConflict(room,start,end,editingId)){ document.getElementById('warnConflict').style.display='block'; return; }
+
+  var r = ROOMS[room];
+  var overCap = r && ppl > r.maxPeople;
+  if(overCap) document.getElementById('warnCap').style.display='block';
+
+  var payload = {
+    guest_name: guest,
+    host: host,
+    room: room,
+    people: ppl,
+    start_date: start,
+    end_date: end,
+    notes: notes
+  };
+
+  showLoading();
+  var res;
+  if(editingId){
+    res = await sb.from('visits').update(payload).eq('id',editingId);
+  } else {
+    res = await sb.from('visits').insert([payload]);
+  }
+  hideLoading();
+
+  if(res.error){ showToast('Error saving — try again'); return; }
+  closeModal();
+  await loadVisits();
+  renderAll();
+}
+
+async function deleteVisit(id){
+  if(!confirm('Remove this visit?')) return;
+  showLoading();
+  await sb.from('visits').delete().eq('id',id);
+  hideLoading();
+  closeDetail();
+  await loadVisits();
+  renderAll();
+}
+
+// ─────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────
+function openNewModal(){
+  editingId = null;
+  document.getElementById('fGuest').value='';
+  document.getElementById('fHost').value='Nancy';
+  document.getElementById('fRoom').value='og1';
+  document.getElementById('fPeople').value='2';
+  document.getElementById('fStart').value=prefillDate||'';
+  document.getElementById('fEnd').value='';
+  document.getElementById('fNotes').value='';
+  document.getElementById('warnErr').style.display='none';
+  document.getElementById('warnConflict').style.display='none';
+  document.getElementById('warnCap').style.display='none';
+  document.getElementById('modalTitle').textContent='Add a visit';
+  updateRoomHint();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openEditModal(id){
+  var v = visits.find(function(x){ return x.id===id; });
+  if(!v) return;
+  editingId = id;
+  document.getElementById('fGuest').value = v.guest_name||'';
+  document.getElementById('fHost').value  = v.host||'Nancy';
+  document.getElementById('fRoom').value  = v.room||'og1';
+  document.getElementById('fPeople').value= v.people||2;
+  document.getElementById('fStart').value = v.start_date||'';
+  document.getElementById('fEnd').value   = v.end_date||'';
+  document.getElementById('fNotes').value = v.notes||'';
+  document.getElementById('warnErr').style.display='none';
+  document.getElementById('warnConflict').style.display='none';
+  document.getElementById('warnCap').style.display='none';
+  document.getElementById('modalTitle').textContent='Edit visit';
+  updateRoomHint();
+  closeDetail();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId=null; prefillDate='';
+}
+
+function updateRoomHint(){
+  var id = document.getElementById('fRoom').value;
+  var r = ROOMS[id];
+  document.getElementById('roomHint').textContent = r ? r.bedDesc+' · sleeps up to '+r.maxPeople : '';
+}
+
+// ─────────────────────────────────────────
+// DETAIL
+// ─────────────────────────────────────────
+function openDetail(id){
+  detailId = id;
+  var v = visits.find(function(x){ return x.id===id; });
+  if(!v) return;
+  var c = HOST_COLORS[v.host]||HOST_COLORS.Family;
+  var r = ROOMS[v.room];
+  var n = nightCount(v.start_date, v.end_date);
+  var overCap = r && v.people > r.maxPeople;
+
+  var html = '';
+  html += '<div class="color-bar" style="background:'+c.bdr+'"></div>';
+  html += '<div class="detail-body">';
+  html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">';
+  html += '<div><div class="dc-label">Guests</div>';
+  html += '<div style="font-size:17px;font-weight:700;color:#1a1a18;margin-bottom:6px">'+(v.guest_name||'')+'</div>';
+  html += '<span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600;background:'+c.bg+';color:'+c.txt+';border:1px solid '+c.bdr+'">hosted by '+(v.host||'')+'</span>';
+  html += '</div>';
+  html += '<div style="text-align:right"><div class="dc-label">People</div>';
+  html += '<div class="big-num">'+(v.people||'')+'</div>';
+  html += (overCap ? '<div style="font-size:10px;color:#993C1D;margin-top:2px">over capacity</div>' : '<div style="font-size:10px;color:#aaa;margin-top:2px">of '+(r?r.maxPeople:'?')+' max</div>');
+  html += '</div></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-box"><div class="dc-label">Room</div><div style="font-size:11px;font-weight:600;color:#1a1a18;line-height:1.3">'+(r?r.label:v.room)+'</div></div>';
+  html += '<div class="stat-box"><div class="dc-label">Beds</div><div style="font-size:11px;font-weight:600;color:#1a1a18">'+(r?r.bedDesc:'—')+'</div></div>';
+  html += '<div class="stat-box"><div class="dc-label">Arrival</div><div style="font-size:11px;font-weight:600;color:#1a1a18">'+fmtDate(v.start_date)+'</div></div>';
+  html += '<div class="stat-box"><div class="dc-label">Nights</div><div style="font-size:11px;font-weight:600;color:#1a1a18">'+n+'</div></div>';
+  html += '</div>';
+  html += '<div class="dc-row"><div class="dc-label">Departure</div><div class="dc-val">'+fmtDate(v.end_date)+'</div></div>';
+  if(r) html += '<div class="dc-row"><div class="dc-label">Area</div><div class="dc-val">'+r.section+'</div></div>';
+  if(v.notes) html += '<div class="dc-row"><div class="dc-label">Notes</div><div class="dc-val">'+(v.notes||'')+'</div></div>';
+  html += '</div>';
+  html += '<div class="detail-footer">';
+  html += '<button class="btn-del" data-did="'+id+'" onclick="deleteVisit(this.dataset.did)">Delete</button>';
+  html += '<div style="display:flex;gap:8px">';
+  html += '<button class="btn-edit" data-eid="'+id+'" onclick="openEditModal(this.dataset.eid)">Edit</button>';
+  html += '<button class="btn-back" onclick="closeDetail()">Close</button>';
+  html += '</div></div>';
+
+  document.getElementById('detailCard').innerHTML = html;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('open');
+  detailId = null;
+}
+
+// ─────────────────────────────────────────
+// FILTERS
+// ─────────────────────────────────────────
+function renderFilters(){
+  var el = document.getElementById('hostFilters');
+  var hosts = ['All','Nancy','Steve','Ben','Wendy','Molly'];
+  var html = '';
+  hosts.forEach(function(h){
+    var cls = 'filter-btn'+(h===activeFilter?' active':'');
+    html += '<button class="'+cls+'" data-fh="'+h+'" onclick="setFilter(this.dataset.fh)">'+h+'</button>';
+  });
+  el.innerHTML = html;
+}
+
+function setFilter(h){
+  activeFilter = h;
+  renderFilters();
+  renderCalendar();
+}
+
+// ─────────────────────────────────────────
+// LEGEND
+// ─────────────────────────────────────────
+function renderLegend(){
+  var el = document.getElementById('legend');
+  var html = '';
+  Object.keys(HOST_COLORS).forEach(function(host){
+    var c = HOST_COLORS[host];
+    html += '<div class="leg-item"><div class="leg-dot" style="background:'+c.bg+';border-color:'+c.bdr+'"></div>'+host+'</div>';
+  });
+  html += '<div class="leg-sep"></div>';
+  [{label:'1–4 guests',bg:'#E1F5EE',bdr:'#0F6E56'},{label:'5–10',bg:'#FAEEDA',bdr:'#854F0B'},{label:'11+',bg:'#FAECE7',bdr:'#993C1D'}].forEach(function(o){
+    html += '<div class="occ-leg"><div class="occ-sq" style="background:'+o.bg+';border:1px solid '+o.bdr+'"></div>'+o.label+'</div>';
+  });
+  el.innerHTML = html;
+}
+
+// ─────────────────────────────────────────
+// CALENDAR RENDER
+// ─────────────────────────────────────────
+function renderCalendar(){
+  var today = todayStr();
+  var filtered = activeFilter==='All' ? visits : visits.filter(function(v){ return v.host===activeFilter; });
+  var el = document.getElementById('calendarContainer');
+  var html = '';
+
+  var totalPeople = visits.reduce(function(a,v){ return a+(v.people||0); },0);
+  document.getElementById('headerMeta').textContent = visits.length+' visits booked · '+totalPeople+' total guests across the summer';
+
+  MONTHS.forEach(function(mo){
+    var days = daysInMonth(mo.y, mo.m);
+    var first = new Date(mo.y, mo.m, 1).getDay();
+    var mVisits = filtered.filter(function(v){
+      var ms=ds(mo.y,mo.m,1), me=ds(mo.y,mo.m,days);
+      return v.start_date<=me && v.end_date>ms;
+    });
+    var allDayPax = Array.from({length:days},function(_,i){ return peopleOn(ds(mo.y,mo.m,i+1)); });
+    var peakPax = Math.max.apply(null,[0].concat(allDayPax));
+    var peakRooms = Math.max.apply(null,[0].concat(Array.from({length:days},function(_,i){ return roomsOn(ds(mo.y,mo.m,i+1)); })));
+    var mPeople = mVisits.reduce(function(a,v){ return a+(v.people||0); },0);
+
+    html += '<div class="month-block">';
+    html += '<div class="month-header">';
+    html += '<span class="month-name">'+mo.name+'</span>';
+    html += '<span class="month-meta">'+mVisits.length+' visit'+(mVisits.length!==1?'s':'')+' &nbsp;·&nbsp; '+mPeople+' guests &nbsp;·&nbsp; peak '+peakPax+' people / '+peakRooms+' rooms</span>';
+    html += '</div>';
+    html += '<div class="dow-row">'+DOW.map(function(d){ return '<div class="dow-cell">'+d+'</div>'; }).join('')+'</div>';
+    html += '<div class="cal-grid">';
+
+    for(var i=0;i<first;i++) html += '<div class="day-cell empty"></div>';
+
+    for(var d=1;d<=days;d++){
+      var dateS = ds(mo.y, mo.m, d);
+      var dow = new Date(mo.y, mo.m, d).getDay();
+      var isToday = dateS===today;
+      var isWknd = dow===0||dow===6;
+      var dayVisits = visitsOn(dateS).filter(function(v){ return activeFilter==='All'||v.host===activeFilter; });
+      var pax = peopleOn(dateS);
+      var pc = paxColor(pax);
+      var cls = 'day-cell'+(isWknd?' weekend':'');
+
+      html += '<div class="'+cls+'" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
+      html += '<div class="day-top">';
+      html += '<div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
+      if(pax>0) html += '<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'" title="'+pax+' guests across '+dayVisits.length+' room(s)">'+pax+'<span style="opacity:0.6;margin-left:1px">pax</span></div>';
+      html += '</div>';
+
+      dayVisits.slice(0,3).forEach(function(v){
+        var c = HOST_COLORS[v.host]||HOST_COLORS.Family;
+        var isStart = dateS===v.start_date;
+        html += '<div class="event-pill" style="background:'+c.bg+';color:'+c.txt+';border-left-color:'+c.bdr+'" data-vid="'+v.id+'" onclick="pillClick(event,this.dataset.vid)" title="'+(v.guest_name||'')+' · '+(v.people||'?')+' people · '+(ROOMS[v.room]?ROOMS[v.room].label:v.room)+'">';
+        html += '<span class="pill-name">'+(isStart?(v.guest_name||''):'&nbsp;')+'</span>';
+        if(isStart) html += '<span class="pill-pax">'+(v.people||'')+'p</span>';
+        html += '</div>';
+      });
+      if(dayVisits.length>3) html += '<div class="more-tag">+'+(dayVisits.length-3)+' more</div>';
+      html += '</div>';
+    }
+
+    var tot=first+days, rem=(7-tot%7)%7;
+    for(var j=0;j<rem;j++) html += '<div class="day-cell empty"></div>';
+    html += '</div></div>';
+  });
+
+  el.innerHTML = html;
+}
+
+function dayClick(e, date){
+  if(e.target.closest('.event-pill')) return;
+  prefillDate = date;
+  openNewModal();
+}
+
+function pillClick(e, id){
+  e.stopPropagation();
+  openDetail(id);
+}
+
+// ─────────────────────────────────────────
+// RENDER ALL
+// ─────────────────────────────────────────
+function renderAll(){
+  renderFilters();
+  renderLegend();
+  renderCalendar();
+}
+
+// ─────────────────────────────────────────
+// CLICK OUTSIDE TO CLOSE
+// ─────────────────────────────────────────
+document.getElementById('modalOverlay').addEventListener('click', function(e){
+  if(e.target===this) closeModal();
+});
+document.getElementById('detailOverlay').addEventListener('click', function(e){
+  if(e.target===this) closeDetail();
+});
+
+// ─────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────
+initSupabase();
+checkSession();
+</script>
+</body>
+</html>
