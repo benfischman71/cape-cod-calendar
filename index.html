@@ -408,6 +408,7 @@ var ROOMS={
   ghf: {label:'Guest house front',      section:'Guest house', maxPeople:2, bedDesc:'1 king',              owner:[]}
 };
 var MEMBER_ROOM={'Steve & Nancy':'ns','Ben & Wendy':'bw',Molly:'mol',TK:'og1',Jake:'og2',Corey:'bunk'};
+var MEMBER_PEOPLE={'Steve & Nancy':2,'Ben & Wendy':2,Molly:1,TK:1,Jake:1,Corey:1};
 var HC={
   'Steve & Nancy':{bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A'},
   'Ben & Wendy': {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
@@ -988,12 +989,13 @@ function renderFamilyCalendar(){
       var hol=HOLIDAYS[dateS];
       var dayFs=familyOn(dateS).filter(function(f){return activeFamilyFilter==='All'||f.member===activeFamilyFilter});
       var homeCount=dayFs.length;
+      var homePeople=dayFs.reduce(function(a,f){return a+(MEMBER_PEOPLE[f.member]||1)},0);
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="fsDayClick(event,this.dataset.date)">';
       var holHtml2='';
       if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';holHtml2='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       html+=holHtml2;
-      if(!hol&&homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homeCount+'</div>';
+      if(!hol&&homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homePeople+'</div>';
       html+='</div>';
       dayFs.slice(0,4).forEach(function(f){
         var c=HC[f.member]||HC.Family;
