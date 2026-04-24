@@ -464,7 +464,7 @@ function isBlockedByGuest(roomId,start,end,excludeId){
 function isBlockedByFamily(roomId,start,end){
   var r=ROOMS[roomId];if(!r||!r.owner||r.owner.length===0)return false;
   return familyStays.some(function(f){
-    return r.owner.indexOf(f.member)>=0&&f.room_available===false&&f.start_date<end&&f.end_date>start;
+    return r.owner.indexOf(f.member)>=0&&f.room_available===false&&(f.start_date||'').substring(0,10)<end&&(f.end_date||'').substring(0,10)>start;
   });
 }
 function isRoomBlocked(roomId,start,end,excludeId){
@@ -692,7 +692,10 @@ async function saveVisit(){
   var cx=rr.filter(function(r){return isBlockedByGuest(r.room,start,end,editingId)});
   if(cx.length>0){document.getElementById('warnConflict').textContent='Already booked by guests: '+cx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');document.getElementById('warnConflict').style.display='block';return}
   var fx=rr.filter(function(r){return isBlockedByFamily(r.room,start,end)});
-  if(fx.length>0){document.getElementById('warnBlocked').textContent='Blocked — family member is using: '+fx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');document.getElementById('warnBlocked').style.display='block';return}
+  var hardFx=fx.filter(function(r){return r.room==='ns'||r.room==='bw'});
+  var softFx=fx.filter(function(r){return r.room!=='ns'&&r.room!=='bw'});
+  if(hardFx.length>0){document.getElementById('warnBlocked').textContent='Blocked — family member is using: '+hardFx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ');document.getElementById('warnBlocked').style.display='block';return}
+  if(softFx.length>0){document.getElementById('warnBlocked').textContent='Note: '+softFx.map(function(r){return ROOMS[r.room]?ROOMS[r.room].label:r.room}).join(', ')+' is marked in use — saving anyway.';document.getElementById('warnBlocked').style.display='block'}
   if(rr.some(function(r){var rm=ROOMS[r.room];return rm&&r.people>rm.maxPeople}))document.getElementById('warnCap').style.display='block';
   showLoading();
   var wasEditing=editingId;
@@ -942,7 +945,7 @@ function renderCalendar(){
       var pax=peopleOn(dateS);var pc=paxColor(pax);var hol=HOLIDAYS[dateS];
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="dayClick(event,this.dataset.date)">';
       var holHtml='';
-      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';holHtml='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right">'+hol.short+'</div>'}
+      if(hol){var hstyle=hol.type==="birthday"?"font-size:8px;font-weight:700;font-style:italic;padding:2px 6px;border-radius:20px;background:#F4C0D1;color:#72243E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em":"font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#FAC775;color:#412402;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em";holHtml='<div style="'+hstyle+'">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       html+=holHtml;
       if(!hol&&pax>0)html+='<div class="pax-badge" style="background:'+pc.bg+';color:'+pc.txt+'">'+pax+'</div>';
@@ -987,7 +990,7 @@ function renderFamilyCalendar(){
       var homePeople=dayFs.reduce(function(a,f){return a+(MEMBER_PEOPLE[f.member]||1)},0);
       html+='<div class="day-cell'+(isWknd?' weekend':'')+'\" data-date="'+dateS+'" onclick="fsDayClick(event,this.dataset.date)">';
       var holHtml2='';
-      if(hol){var hbg=hol.type==='birthday'?'#FBEAF0':'#FAEEDA';var hbdr=hol.type==='birthday'?'#993556':'#854F0B';var htxt=hol.type==='birthday'?'#72243E':'#633806';holHtml2='<div style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:'+hbg+';color:'+htxt+';border-left:2px solid '+hbdr+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right">'+hol.short+'</div>'}
+      if(hol){var hstyle2=hol.type==="birthday"?"font-size:8px;font-weight:700;font-style:italic;padding:2px 6px;border-radius:20px;background:#F4C0D1;color:#72243E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em":"font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#FAC775;color:#412402;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right;letter-spacing:0.02em";holHtml2='<div style="'+hstyle2+'">'+hol.short+'</div>'}
       html+='<div class="day-top"><div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       html+=holHtml2;
       if(!hol&&homeCount>0)html+='<div class="pax-badge" style="background:#EAF3DE;color:#27500A">'+homePeople+'</div>';
