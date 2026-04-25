@@ -275,7 +275,7 @@ const CALENDAR_URL='https://benfischman71.github.io/cape-cod-calendar/';
       <div class="fl"><label>Hosted by</label><select id="vHost"><option>Steve &amp; Nancy</option><option>Ben &amp; Wendy</option><option>TK</option><option>Jake</option><option>Molly</option><option>Corey</option></select></div>
       <div class="two">
         <div class="fl"><label>Arrival</label><input type="date" id="vStart" min="2026-05-01" max="2026-09-30" onchange="onVArrival()"/></div>
-        <div class="fl"><label>Departure</label><input type="date" id="vEnd" min="2026-05-02" max="2026-10-01"/></div>
+        <div class="fl"><label>Departure</label><input type="date" id="vEnd" min="2026-05-02" max="2026-10-01" onchange="updateRA()"/></div>
       </div>
       <div class="fl" id="raSection" style="display:none"><label>Room availability</label><div class="ra-grid" id="raGrid"></div></div>
       <div class="fl">
@@ -453,7 +453,9 @@ function bedsAvail(d){
 }
 
 function blockedByGuest(rid,s,e,excl){
-  return visits.some(function(v){return v.id!==excl&&v.room===rid&&d10(v.start_date)<e&&d10(v.end_date)>s});
+  return visits.some(function(v){
+    return v.id!==excl&&v.room===rid&&d10(v.start_date)<=e&&d10(v.end_date)>=s;
+  });
 }
 function blockedByFam(rid,s,e){
   var r=ROOMS[rid];if(!r||!r.owner||!r.owner.length)return false;
