@@ -460,9 +460,9 @@ function blockedByGuest(rid,s,e,excl){
 function blockedByFam(rid,s,e){
   var r=ROOMS[rid];if(!r||!r.owner||!r.owner.length)return false;
   if(r.owner[0]!=='Steve & Nancy'&&r.owner[0]!=='Ben & Wendy'){
-    return famStays.some(function(f){return r.owner.indexOf(f.member)>=0&&f.room_available===false&&d10(f.start_date)<e&&d10(f.end_date)>s});
+    return famStays.some(function(f){return r.owner.indexOf(f.member)>=0&&f.room_available===false&&d10(f.start_date)<=e&&d10(f.end_date)>=s});
   }
-  return famStays.some(function(f){return r.owner.indexOf(f.member)>=0&&f.room_available===false&&d10(f.start_date)<e&&d10(f.end_date)>s});
+  return famStays.some(function(f){return r.owner.indexOf(f.member)>=0&&f.room_available===false&&d10(f.start_date)<=e&&d10(f.end_date)>=s});
 }
 function isBlocked(rid,s,e,excl){return blockedByGuest(rid,s,e,excl)||blockedByFam(rid,s,e)}
 
@@ -762,7 +762,7 @@ async function saveAllFam(){
   document.getElementById('wAfErr').style.display='none';
   if(!start||!end||start>=end){document.getElementById('wAfErr').style.display='block';return}
   var alreadyBooked=MEMBERS.filter(function(m){
-    return famStays.some(function(f){return f.member===m&&d10(f.start_date)<end&&d10(f.end_date)>start});
+    return famStays.some(function(f){return f.member===m&&d10(f.start_date)<=end&&d10(f.end_date)>=start});
   });
   var toBook=MEMBERS.filter(function(m){return alreadyBooked.indexOf(m)<0});
   if(toBook.length===0){toast('All family members already have dates booked in this range');closeOv('allFamOv');return}
