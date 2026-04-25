@@ -948,7 +948,8 @@ function renderGuestCal(){
       html+='<div class="day-top">';
       html+='<div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       if(hol){html+='<span class="'+(hol.type==='birthday'?'hol-birthday':'hol-holiday')+'">'+hol.short+'</span>'}
-      else if(ba<TOTAL_BEDS){html+='<span class="ba-badge" style="color:'+baCol+'">BA:'+ba+'</span>'}
+      else if(ba<TOTAL_BEDS&&ba>0){html+='<span class="ba-badge" style="color:'+baCol+'">BA:'+ba+'</span>'}
+      if(ba===0){html+='<span class="ba-badge" style="color:#fff;background:#993C1D;border-radius:3px;padding:1px 4px">FULL</span>'}
       html+='</div>';
       // PILLS
       html+='<div class="pills-wrap">';
@@ -1009,7 +1010,8 @@ function renderFamCal(){
       html+='<div class="day-top">';
       html+='<div class="day-num'+(isToday?' is-today':'')+'">'+d+'</div>';
       if(hol){html+='<span class="'+(hol.type==='birthday'?'hol-birthday':'hol-holiday')+'">'+hol.short+'</span>'}
-      else if(ba<TOTAL_BEDS){html+='<span class="ba-badge" style="color:'+baCol+'">BA:'+ba+'</span>'}
+      else if(ba<TOTAL_BEDS&&ba>0){html+='<span class="ba-badge" style="color:'+baCol+'">BA:'+ba+'</span>'}
+      if(ba===0){html+='<span class="ba-badge" style="color:#fff;background:#993C1D;border-radius:3px;padding:1px 4px">FULL</span>'}
       html+='</div>';
       html+='<div class="pills-wrap">';
       // 1. Group event pills
