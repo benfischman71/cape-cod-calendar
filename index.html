@@ -252,6 +252,10 @@ const CALENDAR_URL='https://benfischman71.github.io/cape-cod-calendar/';
           <span style="font-size:24px">🏠</span>
           <div style="text-align:left"><div style="font-size:15px;font-weight:700;color:#27500A">My dates at the house</div><div style="font-size:12px;color:#3B6D11;margin-top:2px">Mark when you'll be here</div></div>
         </button>
+        <button onclick="dayActAllFam()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#F1EFE8;border:1px solid #5F5E5A;border-radius:12px;cursor:pointer;width:100%">
+          <span style="font-size:24px">👨‍👩‍👧‍👦</span>
+          <div style="text-align:left"><div style="font-size:15px;font-weight:700;color:#444441">Book all family</div><div style="font-size:12px;color:#888;margin-top:2px">Add dates for everyone at once</div></div>
+        </button>
       </div>
     </div>
     <div class="modal-foot" style="justify-content:center;border-top:none">
@@ -547,6 +551,7 @@ function openOv(id){document.getElementById(id).classList.add('open')}
 function dayClick(e,date){if(e.target.closest('.event-pill,.family-pill'))return;prefillDate=date;var d=pd(date);document.getElementById('dayActionLbl').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});openOv('dayActionOv')}
 function dayActGuest(){closeOv('dayActionOv');openVisitModal()}
 function dayActFam(){closeOv('dayActionOv');openFamModal()}
+function dayActAllFam(){closeOv('dayActionOv');openAllFamModal()}
 function pillClick(e,id){e.stopPropagation();openDet(+id)}
 function fsPillClick(e,id){e.stopPropagation();openFsDet(+id)}
 
