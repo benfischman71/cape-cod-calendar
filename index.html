@@ -583,7 +583,7 @@ function addRR(rid,ppl,cn){
     +'<div style="margin-bottom:8px">'+roomSelHtml(rid,idx)
     +'<div style="font-size:11px;color:#aaa;margin-top:4px" id="rHint'+idx+'">'+(r?r.bedDesc+' · sleeps up to '+r.maxPeople:'')+(blk?' · <span style="color:#993C1D;font-weight:600">blocked</span>':'')+'</div></div>'
     +'<div class="two">'
-    +'<div class="fl"><label style="font-size:11px">People in this room</label><input type="number" id="rPpl'+idx+'" value="'+ppl+'" min="1" max="20" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;text-align:center;-webkit-appearance:none;width:100%"/></div>'
+    +'<div class="fl"><label style="font-size:11px">People in this room</label><input type="number" id="rPpl'+idx+'" value="'+ppl+'" min="1" max="40" inputmode="numeric" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:16px;background:#fff;text-align:center;width:100%"/></div>'
     +'<div class="fl"><label style="font-size:11px">Who\'s staying here?</label><input id="rCn'+idx+'" value="'+cn+'" placeholder="e.g. Tom &amp; Alice" style="padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff;color:#1a1a18;-webkit-appearance:none;width:100%"/></div>'
     +'</div>'
     +'<div style="font-size:11px;color:#aaa;margin-top:6px">Any names here — one person, a couple, or the whole group in this room</div>';
@@ -710,6 +710,11 @@ async function saveVisit(){
     if(res.error&&res.error.message&&res.error.message.indexOf('is_group')>=0){
       var p2=payload(r);delete p2.is_group;
       res=await sb.from('visits').update(p2).eq('id',editingVid);
+    }
+    // Also update dates/host/name on sibling rows (same guest_name, different room)
+    var siblings=visits.filter(function(v){return v.id!==editingVid&&v.guest_name===name});
+    if(siblings.length>0){
+      await sb.from('visits').update({guest_name:name,host:host,is_group:isGrp,start_date:start,end_date:end,notes:notes}).in('id',siblings.map(function(v){return v.id}));
     }
   } else {
     var rows=rrs.map(payload);
