@@ -78,7 +78,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ba-badge{font-size:7px;font-weight:700;flex-shrink:0;line-height:1}
 .pills-wrap{display:flex;flex-wrap:wrap;gap:2px;align-content:flex-start;flex:1;overflow:hidden}
 .event-pill{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.4;border-left:3px solid transparent;display:inline-flex;align-items:center;gap:2px;max-width:100%}
-.event-pill.group-pill{width:100%;font-weight:700;font-size:7px}
+.event-pill.group-pill{width:100%;font-weight:700;background:#1a1a18 !important;color:#fff !important;border-left-color:#1a1a18 !important;font-size:7px}
 .pill-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
 .pill-pax{flex-shrink:0;opacity:0.7;font-size:6px}
 .family-pill{font-size:7px;font-weight:700;padding:2px 6px;border-radius:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.5;display:inline-flex;align-items:center;background:#2C2C2A;color:#f5f0e8;max-width:100%}
@@ -236,30 +236,35 @@ const CALENDAR_URL='https://benfischman71.github.io/cape-cod-calendar/';
   </div>
 </div>
 
-<!-- DAY ACTION SHEET -->
+<!-- DAY DETAIL SHEET -->
 <div class="overlay" id="dayActionOv">
-  <div class="modal">
+  <div class="modal" style="max-height:88vh">
     <div class="modal-handle"></div>
-    <div class="modal-body" style="padding-top:20px">
-      <div style="font-size:13px;color:#888;text-align:center;margin-bottom:4px" id="dayActionLbl"></div>
-      <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:20px">What would you like to add?</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <button onclick="dayActGuest()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#E6F1FB;border:1px solid #185FA5;border-radius:12px;cursor:pointer;width:100%">
-          <span style="font-size:24px">🏖</span>
-          <div style="text-align:left"><div style="font-size:15px;font-weight:700;color:#0C447C">Guest visit</div><div style="font-size:12px;color:#378ADD;margin-top:2px">Book guests into a bedroom</div></div>
+    <div class="modal-head">
+      <div>
+        <div style="font-size:13px;color:#888;font-weight:400" id="dayActionLbl"></div>
+        <div style="font-size:16px;font-weight:700;margin-top:2px" id="dayActionSummary"></div>
+      </div>
+      <button class="modal-x" onclick="closeOv('dayActionOv')">×</button>
+    </div>
+    <div class="modal-body" style="gap:10px">
+      <div id="dayDetailContent"></div>
+      <div style="height:1px;background:#f0ece4;margin:2px 0"></div>
+      <div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.05em">Add to this date</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button onclick="dayActGuest()" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E6F1FB;border:1px solid #185FA5;border-radius:10px;cursor:pointer;width:100%">
+          <span style="font-size:20px">🏖</span>
+          <div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#0C447C">Guest visit</div></div>
         </button>
-        <button onclick="dayActFam()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#EAF3DE;border:1px solid #3B6D11;border-radius:12px;cursor:pointer;width:100%">
-          <span style="font-size:24px">🏠</span>
-          <div style="text-align:left"><div style="font-size:15px;font-weight:700;color:#27500A">My dates at the house</div><div style="font-size:12px;color:#3B6D11;margin-top:2px">Mark when you'll be here</div></div>
+        <button onclick="dayActFam()" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#EAF3DE;border:1px solid #3B6D11;border-radius:10px;cursor:pointer;width:100%">
+          <span style="font-size:20px">🏠</span>
+          <div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#27500A">My dates at the house</div></div>
         </button>
-        <button onclick="dayActAllFam()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#F1EFE8;border:1px solid #5F5E5A;border-radius:12px;cursor:pointer;width:100%">
-          <span style="font-size:24px">👨‍👩‍👧‍👦</span>
-          <div style="text-align:left"><div style="font-size:15px;font-weight:700;color:#444441">Book all family</div><div style="font-size:12px;color:#888;margin-top:2px">Add dates for everyone at once</div></div>
+        <button onclick="dayActAllFam()" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F1EFE8;border:1px solid #5F5E5A;border-radius:10px;cursor:pointer;width:100%">
+          <span style="font-size:20px">👨‍👩‍👧‍👦</span>
+          <div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#444441">Book all family</div></div>
         </button>
       </div>
-    </div>
-    <div class="modal-foot" style="justify-content:center;border-top:none">
-      <button onclick="closeOv('dayActionOv')" style="padding:10px 24px;font-size:14px;background:transparent;border:none;cursor:pointer;color:#aaa;min-height:40px">Cancel</button>
     </div>
   </div>
 </div>
@@ -548,7 +553,60 @@ function openOv(id){document.getElementById(id).classList.add('open')}
 });
 
 // ── DAY ACTION ───────────────────────────────────────────────────────────────
-function dayClick(e,date){if(e.target.closest('.event-pill,.family-pill'))return;prefillDate=date;var d=pd(date);document.getElementById('dayActionLbl').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});openOv('dayActionOv')}
+function dayClick(e,date){
+  if(e.target.closest('.event-pill,.family-pill'))return;
+  prefillDate=date;
+  var d=pd(date);
+  document.getElementById('dayActionLbl').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  var dv=visitsOn(date);
+  var fam=famOn(date);
+  var ba=bedsAvail(date);
+  var baCol=ba===0?'#993C1D':ba<=3?'#A32D2D':ba<=7?'#854F0B':'#27500A';
+  var total=fam.reduce(function(a,f){return a+(MEMBER_COUNT[f.member]||1)},0)+dv.reduce(function(a,v){return a+(v.people||0)},0);
+  document.getElementById('dayActionSummary').textContent=(total>0?total+' people · ':'')+(ba===0?'House full':'BA: '+ba+' bed'+(ba!==1?'s':'')+' available');
+  document.getElementById('dayActionSummary').style.color=baCol;
+  var h='';
+  if(dv.length===0&&fam.length===0){
+    h='<div style="font-size:13px;color:#aaa;text-align:center;padding:8px 0">Nothing booked yet</div>';
+  } else {
+    // Groups
+    var grouped={};
+    dv.forEach(function(v){if(v.is_group){var k=v.guest_name||'';if(!grouped[k])grouped[k]={totalPpl:0,host:v.host,rooms:[],id:v.id};grouped[k].totalPpl+=(v.people||0);grouped[k].rooms.push(ROOMS[v.room]?ROOMS[v.room].label:v.room)}});
+    Object.keys(grouped).forEach(function(k){
+      var g=grouped[k];var c=HC[g.host]||HC.Family;
+      h+='<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+c.bg+';border:1px solid '+c.bdr+';border-radius:10px;margin-bottom:6px;cursor:pointer" data-vid="'+g.id+'" onclick="closeOv(\'dayActionOv\');openDet(+this.dataset.vid)">';
+      h+='<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:'+c.txt+'">'+k+'</div>';
+      h+='<div style="font-size:11px;color:'+c.txt+';opacity:.8;margin-top:2px">'+g.rooms.join(', ')+' · hosted by '+g.host+'</div></div>';
+      h+='<div style="font-size:18px;font-weight:700;color:'+c.txt+'">'+g.totalPpl+'<span style="font-size:10px;font-weight:400"> ppl</span></div></div>';
+    });
+    // Family
+    if(fam.length>0){
+      h+='<div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Family home</div>';
+      h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">';
+      fam.forEach(function(f){
+        var avail=f.room_available!==false;
+        h+='<div style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#2C2C2A;color:#f5f0e8;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer" data-fsid="'+f.id+'" onclick="closeOv(\'dayActionOv\');openFsDet(+this.dataset.fsid)">';
+        h+=f.member+(avail?' <span style="font-size:9px;opacity:.6">open</span>':' <span style="font-size:9px;color:#F4A0A0">unavail</span>');
+        h+='</div>';
+      });
+      h+='</div>';
+    }
+    // Singles
+    var singles=dv.filter(function(v){return!v.is_group});
+    if(singles.length>0){
+      h+='<div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Guests</div>';
+      singles.forEach(function(v){
+        var c=HC[v.host]||HC.Family;var r=ROOMS[v.room];
+        h+='<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:'+c.bg+';border-left:3px solid '+c.bdr+';border-radius:6px;margin-bottom:5px;cursor:pointer" data-vid="'+v.id+'" onclick="closeOv(\'dayActionOv\');openDet(+this.dataset.vid)">';
+        h+='<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:'+c.txt+'">'+(v.couple_name||v.guest_name||'')+'</div>';
+        h+='<div style="font-size:11px;color:'+c.txt+';opacity:.8;margin-top:1px">'+(r?r.label:'')+'</div></div>';
+        h+='<div style="font-size:14px;font-weight:700;color:'+c.txt+'">'+v.people+'<span style="font-size:10px;font-weight:400"> ppl</span></div></div>';
+      });
+    }
+  }
+  document.getElementById('dayDetailContent').innerHTML=h;
+  openOv('dayActionOv');
+}
 function dayActGuest(){closeOv('dayActionOv');openVisitModal()}
 function dayActFam(){closeOv('dayActionOv');openFamModal()}
 function dayActAllFam(){closeOv('dayActionOv');openAllFamModal()}
