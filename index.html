@@ -214,8 +214,8 @@ const CALENDAR_URL='https://benfischman71.github.io/cape-cod-calendar/';
     </div>
     <!-- FAMILY VIEW -->
     <div id="famView">
-      <div class="toolbar">
-        <div class="filter-scroll"><div class="filter-row" id="famFilters"></div></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="add-btn" style="background:#5F5E5A" onclick="openAllFamModal()">+ Book all family</button>
         <button class="add-btn" style="background:#3B6D11" onclick="openFamModal()">+ Add my dates</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:5px 12px;margin-bottom:12px;font-size:11px;color:#666">
@@ -331,6 +331,34 @@ const CALENDAR_URL='https://benfischman71.github.io/cape-cod-calendar/';
 <!-- FAM DETAIL -->
 <div class="overlay" id="fsDetOv"><div class="det-card" id="fsDetCard"></div></div>
 
+<!-- ALL FAMILY MODAL -->
+<div class="overlay" id="allFamOv">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Book all family</h3><button class="modal-x" onclick="closeOv('allFamOv')">×</button></div>
+    <div class="modal-body">
+      <div style="background:#f5f0e8;border-radius:10px;padding:10px 14px;font-size:12px;color:#888;line-height:1.5">Books all 6 family members for the same date range. You can edit individual stays afterward.</div>
+      <div class="two">
+        <div class="fl"><label>Arriving</label><input type="date" id="afStart" min="2026-05-01" max="2026-09-30" onchange="onAfArrival()"/></div>
+        <div class="fl"><label>Leaving</label><input type="date" id="afEnd" min="2026-05-02" max="2026-10-01"/></div>
+      </div>
+      <div class="fl">
+        <label>Bedrooms</label>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;background:#faf8f5;margin-bottom:8px">
+          <input type="radio" name="afAvail" id="afYes" value="true" checked style="width:22px;height:22px;accent-color:#3B6D11;flex-shrink:0;margin-top:2px;cursor:pointer"/>
+          <div><div style="font-size:14px;font-weight:600;color:#27500A">Open for guests</div><div style="font-size:12px;color:#888;margin-top:2px">All bedrooms available to book guests into</div></div>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;background:#faf8f5">
+          <input type="radio" name="afAvail" id="afNo" value="false" style="width:22px;height:22px;accent-color:#993C1D;flex-shrink:0;margin-top:2px;cursor:pointer"/>
+          <div><div style="font-size:14px;font-weight:600;color:#993C1D">Unavailable — we're using them</div><div style="font-size:12px;color:#888;margin-top:2px">All family bedrooms blocked for these dates</div></div>
+        </label>
+      </div>
+      <div class="warn warn-err" id="wAfErr">Please fill in both arrival and departure.</div>
+    </div>
+    <div class="modal-foot"><button class="btn-cancel" onclick="closeOv('allFamOv')">Cancel</button><button class="btn-save-green" onclick="saveAllFam()">Book all family</button></div>
+  </div>
+</div>
+
 <!-- NOTIFY -->
 <div class="overlay" id="notifyOv">
   <div class="modal" style="max-height:80vh">
@@ -417,9 +445,11 @@ function famOn(d){return famStays.filter(function(f){return d>=d10(f.start_date)
 function peopleOn(d){return visitsOn(d).reduce(function(a,v){return a+(v.people||0)},0)}
 
 function bedsAvail(d){
-  var guestBeds=visitsOn(d).reduce(function(a,v){var r=ROOMS[v.room];return a+(r?r.bedCount:1)},0);
-  var famBeds=famOn(d).length;
-  return Math.max(0,TOTAL_BEDS-guestBeds-famBeds);
+  var usedRooms={};
+  visitsOn(d).forEach(function(v){if(v.room)usedRooms[v.room]=true});
+  famOn(d).forEach(function(f){var rid=MEMBER_ROOM[f.member];if(rid)usedRooms[rid]=true});
+  var used=Object.keys(usedRooms).reduce(function(a,rid){var r=ROOMS[rid];return a+(r?r.bedCount:1)},0);
+  return Math.max(0,TOTAL_BEDS-used);
 }
 
 function blockedByGuest(rid,s,e,excl){
@@ -506,7 +536,7 @@ function subscribeRt(){
 // ── OVERLAYS ─────────────────────────────────────────────────────────────────
 function closeOv(id){document.getElementById(id).classList.remove('open')}
 function openOv(id){document.getElementById(id).classList.add('open')}
-['visitOv','famOv','detOv','fsDetOv','notifyOv','dayActionOv'].forEach(function(id){
+['visitOv','famOv','allFamOv','detOv','fsDetOv','notifyOv','dayActionOv'].forEach(function(id){
   var el=document.getElementById(id);
   if(el)el.addEventListener('click',function(e){if(e.target===this)closeOv(id)});
 });
@@ -703,6 +733,36 @@ async function deleteVisit(id){
   showLoad();await sb.from('visits').delete().eq('id',id);hideLoad();closeOv('detOv');await loadVisits();renderAll();
 }
 
+function onAfArrival(){
+  var s=document.getElementById('afStart').value,eEl=document.getElementById('afEnd');
+  if(!s)return;
+  var nx=new Date(pd(s).getTime()+864e5);var ns=ds(nx.getFullYear(),nx.getMonth(),nx.getDate());
+  eEl.min=ns;if(!eEl.value||eEl.value<=s)eEl.value=ns;
+  setTimeout(function(){eEl.focus();eEl.click()},80);
+}
+function openAllFamModal(){
+  document.getElementById('afStart').value=prefillDate||'2026-05-24';
+  document.getElementById('afEnd').value='';
+  document.getElementById('afYes').checked=true;
+  document.getElementById('wAfErr').style.display='none';
+  onAfArrival();
+  openOv('allFamOv');
+}
+async function saveAllFam(){
+  var start=document.getElementById('afStart').value;
+  var end=document.getElementById('afEnd').value;
+  var avail=document.getElementById('afYes').checked;
+  document.getElementById('wAfErr').style.display='none';
+  if(!start||!end||start>=end){document.getElementById('wAfErr').style.display='block';return}
+  showLoad();
+  var rows=MEMBERS.map(function(m){return{member:m,start_date:start,end_date:end,room_available:avail,notes:null}});
+  var res=await sb.from('family_stays').insert(rows);
+  hideLoad();
+  if(res.error){toast('Error saving — try again');return}
+  closeOv('allFamOv');await loadFam();renderAll();
+  toast('All family booked for '+fmt(start)+' → '+fmt(end));
+}
+
 // ── FAMILY MODAL ──────────────────────────────────────────────────────────────
 function openFamModal(id){
   if(id){
@@ -824,12 +884,8 @@ function renderFilters(){
   document.getElementById('guestFilters').innerHTML=opts.map(function(h){
     return'<button class="filter-btn'+(h===guestFilter?' active':'')+'\" data-h="'+h+'" onclick="setGF(this.dataset.h)">'+h+'</button>';
   }).join('');
-  document.getElementById('famFilters').innerHTML=opts.map(function(h){
-    return'<button class="filter-btn'+(h===famFilter?' active':'')+'\" data-h="'+h+'" onclick="setFF(this.dataset.h)">'+h+'</button>';
-  }).join('');
 }
 function setGF(h){guestFilter=h;renderFilters();renderGuestCal()}
-function setFF(h){famFilter=h;renderFilters();renderFamCal()}
 
 function renderLegend(){
   var h='';
@@ -912,7 +968,6 @@ function renderGuestCal(){
 }
 
 function renderFamCal(){
-  renderFilters();
   var today=todayS();
   var html='';
   MONTHS.forEach(function(mo){
