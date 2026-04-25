@@ -62,11 +62,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .month-header{padding:10px 14px 8px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:3px;border-bottom:1px solid #f0ece4;background:#faf8f5}
 .month-name{font-size:16px;font-weight:700}
 .month-meta{font-size:11px;color:#888}
-.dow-row{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #f0ece4}
+.month-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dow-row{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));border-bottom:1px solid #f0ece4;min-width:560px}
 .dow-cell{text-align:center;padding:5px 0;font-size:10px;color:#aaa;font-weight:600;border-right:1px solid #f0ece4}
 .dow-cell:last-child{border-right:none}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.day-cell{min-height:150px;max-height:150px;padding:4px 4px 3px;border-right:1px solid #f0ece4;border-bottom:1px solid #f0ece4;background:#fff;cursor:pointer;display:flex;flex-direction:column;overflow:hidden}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));min-width:560px}
+.day-cell{min-height:160px;max-height:160px;padding:5px 5px 4px;border-right:1px solid #f0ece4;border-bottom:1px solid #f0ece4;background:#fff;cursor:pointer;display:flex;flex-direction:column;overflow:hidden}
 .day-cell:nth-child(7n){border-right:none}
 .day-cell:active{background:#f5f0e8}
 .day-cell.empty{background:#faf8f5;cursor:default}
@@ -142,6 +143,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .modal-handle{display:none}
   .det-card{border-radius:16px;width:460px;max-height:86vh}
   .day-cell{min-height:180px;max-height:180px;padding:5px}
+  .dow-row{min-width:unset;grid-template-columns:repeat(7,1fr)}
+  .cal-grid{min-width:unset;grid-template-columns:repeat(7,1fr)}
   .day-num{font-size:12px;width:22px;height:22px}
   .event-pill,.family-pill{font-size:8px}
   .event-pill.group-pill{font-size:8px}
@@ -989,7 +992,7 @@ function renderGuestCal(){
     var mPpl=mV.reduce(function(a,v){return a+(v.people||0)},0);
     html+='<div class="month-block">';
     html+='<div class="month-header"><span class="month-name">'+mo.name+'</span><span class="month-meta">'+mV.length+' visit'+(mV.length!==1?'s':'')+' · '+mPpl+' guests</span></div>';
-    html+='<div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell">'+d[0]+'</div>'}).join('')+'</div>';
+    html+='<div class="month-scroll"><div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell">'+d[0]+'</div>'}).join('')+'</div>';
     html+='<div class="cal-grid">';
     for(var i=0;i<first;i++)html+='<div class="day-cell empty"></div>';
     for(var d=1;d<=days;d++){
@@ -1039,7 +1042,7 @@ function renderGuestCal(){
     }
     var rem=(7-(first+days)%7)%7;
     for(var j=0;j<rem;j++)html+='<div class="day-cell empty"></div>';
-    html+='</div></div>';
+    html+='</div></div></div>';
   });
   document.getElementById('guestCal').innerHTML=html;
 }
@@ -1053,7 +1056,7 @@ function renderFamCal(){
     var mF=famStays.filter(function(f){var ms=ds(mo.y,mo.m,1),me=ds(mo.y,mo.m,days);return d10(f.start_date)<=me&&d10(f.end_date)>=ms&&(famFilter==='All'||f.member===famFilter)});
     html+='<div class="month-block">';
     html+='<div class="month-header"><span class="month-name">'+mo.name+'</span><span class="month-meta">'+mF.length+' stay'+(mF.length!==1?'s':'')+'</span></div>';
-    html+='<div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell">'+d[0]+'</div>'}).join('')+'</div>';
+    html+='<div class="month-scroll"><div class="dow-row">'+DOW.map(function(d){return'<div class="dow-cell">'+d[0]+'</div>'}).join('')+'</div>';
     html+='<div class="cal-grid">';
     for(var i=0;i<first;i++)html+='<div class="day-cell empty"></div>';
     for(var d=1;d<=days;d++){
@@ -1100,7 +1103,7 @@ function renderFamCal(){
     }
     var rem=(7-(first+days)%7)%7;
     for(var j=0;j<rem;j++)html+='<div class="day-cell empty"></div>';
-    html+='</div></div>';
+    html+='</div></div></div>';
   });
   document.getElementById('famCal').innerHTML=html;
 }
